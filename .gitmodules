@@ -1,0 +1,3 @@
+[submodule "lib/remixjs"]
+	path = lib/remixjs
+	url = git@github.com:also/remixjs.git
