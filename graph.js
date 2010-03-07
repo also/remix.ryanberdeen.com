@@ -8,7 +8,7 @@ function initCanvas() {
   ctx = canvas.getContext('2d');
   window.addEventListener('resize', function() {
     canvas.width = window.innerWidth;
-    if (Remix.sampleRanges) {
+    if (Remix.mixSpec) {
       draw();
     }
   });
@@ -21,14 +21,14 @@ function canvasClickHandler() {
   else {
     draw = drawCurves;
   }
-  if (Remix.sampleRanges) {
+  if (Remix.mixSpec) {
     draw();
   }
 }
 
 var remixDuration;
 function drawCurves() {
-  var segments = Remix.sampleRanges;
+  var segments = Remix.mixSpec;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.globalCompositeOperation = "darker";
 
@@ -37,9 +37,9 @@ function drawCurves() {
   var scale = canvas.width / Math.max(remixDuration, Remix.analysis.metadata.duration);
 
   var remixPosition = 0;
-  for (var i = 0; i < segments.length; i += 2) {
-    var start = segments[i];
-    var end = segments[i + 1];
+  for (var i = 0; i < segments.length; i++) {
+    var start = segments[i][0];
+    var end = segments[i][1];
     var duration = end - start;
     var top = start + duration / 2;
     var bottom = remixPosition + duration / 2;
@@ -54,7 +54,7 @@ function drawCurves() {
 }
 
 function drawGraph() {
-  var segments = Remix.sampleRanges;
+  var segments = Remix.mixSpec;
   ctx.fillStyle = '#222222';
   ctx.globalCompositeOperation = "source-over";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -65,9 +65,9 @@ function drawGraph() {
   var yScale = canvas.height / remixDuration;
 
   var remixPosition = 0;
-  for (var i = 0; i < segments.length - 1; i += 2) {
-    var start = segments[i];
-    var end = segments[i + 1];
+  for (var i = 0; i < segments.length; i++) {
+    var start = segments[i][0];
+    var end = segments[i][1];
     var duration = end - start;
     ctx.beginPath();
     ctx.strokeStyle = '#00aeef';
