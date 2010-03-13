@@ -2,10 +2,10 @@
 <html>
 <head>
 <title>remix</title>
-<script src="http://ajax.googleapis.com/ajax/libs/swfobject/2.1/swfobject.js" type="text/javascript"></script>
+<script src="swfobject.js" type="text/javascript"></script>
+<script src="prototype.js" type="text/javascript"></script>
 <link rel="stylesheet" href="remix.css" type="text/css" media="screen"/>
 <script type="text/javascript" src="remix.js"></script>
-<script type="text/javascript" src="graph.js"></script>
 <script type="text/javascript" src="editor.js"></script>
 </head>
 <body>
@@ -13,37 +13,90 @@
 <div id="progress-wrapper"><div id="progress" style="width: 0%;"></div></div>
 <h1>Remix</h1>
 
-<canvas id="canvas" width="100" height="300"></canvas>
-
 <div id="remix">
 <div id="left">
-<div id="swf"></div>
-<p>Edit songs with JavaScript and <a href="http://echonest.com">The Echo Nest</a>.</p>
+<div id="swf_wrapper"><div class="button">Browse for a file...</div><div id="swf"></div></div>
+<ul id="tracks"></ul>
+</div>
 
-<p>Created by <a href="http://ryanberdeen.com">Ryan Berdeen</a>.</p>
-<p>Bugs, feedback, etc: <a href="mailto:remix@ryanberdeen.com">remix@ryanberdeen.com</a></p>
+<div id="right">
+<div id="controls"><span id="run_button">Run</span>
+<span id="play_button">Play/Pause</span></div>
+
+<div id="editor">
+<textarea id="remixJs" rows="20" cols="60">var bars = analysis.bars;
+var samples = [];
+
+for (var i = 0; i < bars.length; i++) {
+    samples.push(bars[i].children()[0]);
+}
+
+play(samples);</textarea>
+</div>
+</div>
+</div>
 
 <div id="credit"><a href="http://echonest.com"><img src="http://the.echonest.com/media/images/logos/140x50_lt.gif" alt="Powered By The Echo Nest"></a></div>
-</div>
-
-<textarea id="remixJs" rows="20" cols="60">function remix (analysis) {
-  var bars = analysis.bars;
-  var samples = [];
-
-  for (var i = 0; i < bars.length; i++) {
-    samples.push(bars[i].children()[0].touch({pitchOctaves: -1}));
-  }
-
-  return samples;
-}</textarea>
-</div>
 <script type="text/javascript">
-Remix.onRemix = draw;
-var apiKey = prompt('Enter your Echo Nest API key');
-if (apiKey) {
-    Remix.init(apiKey);
-    initCanvas();
+var apiKey = null;
+var required = Remix.apiKeyRequired();
+
+if (required) {
+    apiKey = prompt('Enter your Echo Nest API key')
 }
+
+if (!required || apiKey) {
+    Remix.init(apiKey);
+}
+
+$('run_button').observe('click', function (e) {Remix.run();});
+$('play_button').observe('click', function (e) {Remix.togglePlayPause();});
+var tracksElt = $('tracks');
+extend(Remix, {
+    onTrackAdded: function (track) {
+        var elt = new Element('li');
+        var titleElt = new Element('span', {'class': 'track_title'});
+        elt.insert(titleElt);
+        
+        var analysisStatusWrapperElt = new Element('span', {'class': 'track_analysis_status'});
+        analysisStatusWrapperElt.insert('Analysis: ');
+        var analysisStatusElt = new Element('span', {'class': 'value'});
+        analysisStatusWrapperElt.insert(analysisStatusElt);
+        elt.insert(analysisStatusWrapperElt);
+        
+        var soundStatusWrapperElt = new Element('span', {'class': 'track_sound_status'});
+        soundStatusWrapperElt.insert('Sound: ');
+        var soundStatusElt = new Element('span', {'class': 'value'});
+        soundStatusWrapperElt.insert(soundStatusElt);
+        elt.insert(soundStatusWrapperElt);
+        
+        titleElt.update('Track loading...');
+        tracksElt.insert(elt);
+        track.elt = elt;
+        track.titleElt = titleElt;
+        track.analysisStatusElt = analysisStatusElt;
+        track.soundStatusElt = soundStatusElt;
+    },
+
+    onTrackSoundLoading: function (track) {
+        track.titleElt.update(track.file.name);
+        track.soundStatusElt.update('loading');
+    },
+    
+    onTrackSoundLoaded: function (track) {
+        track.soundStatusElt.update('loaded');
+    },
+    
+    onTrackAnalysisLoading: function (track) {
+        track.analysisStatusElt.update('loading');
+    },
+    
+    onTrackAnalysisLoaded: function (track) {
+        track.analysisStatusElt.update('loaded');
+    }
+});
+
+
 </script>
 </body>
 </html>
