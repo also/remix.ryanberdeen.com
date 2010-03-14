@@ -14,9 +14,6 @@ var playButtonElt = $('play_button');
 playButtonElt.observe('click', function (e) {Remix.togglePlayPause();});
 var tracksElt = $('tracks');
 
-var searchParamsElt = $('search_params');
-
-$('show_search_button').observe('click', function () { $('search_params').toggle(); });
 extend(Remix, {
     onTrackAdded: function (track) {
         var elt = new Element('li');
@@ -114,12 +111,38 @@ function playTrack(track) {
     }
 }
 
+var searchParamsElt = $('search_params');
+
+$('show_search_button').observe('click', function () {
+    $('search_params').toggle();
+});
+
+var simplesearchInputElt = $('simplesearch_input');
+simplesearchInputElt.observe('search', function (e) {
+    var value = simplesearchInputElt.value.strip();
+    if (value.empty()) {
+        return;
+    }
+    search({title: value, artist: value});
+});
+
 var searchInputsElt = $('search_inputs');
 
 $('search_button').observe('click', search);
-$('search_inputs').observe('submit', function (e) { e.stop(); search(); } )
+$('search_inputs').observe('submit', function (e) {
+    e.stop();
+    var params = {};
+    searchInputsElt.select('input').each(function (inputElt) {
+        var value = inputElt.value.strip();
+        if (!value.empty()) {
+            params[inputElt.id] = inputElt.value;
+        }
+    });
+    search(params);
+});
 
-function search() {
+function search(params) {
+    params.heather = true;
     var resultsElt = new Element('div', {'class': 'search_results'});
     var titleElt = new Element('h2').update('Search Results');
     var doneElt = new Element('span', {'class': 'button done_button'}).update('done');
@@ -131,13 +154,7 @@ function search() {
     //resultsElt.insert('Searching...');
     var ulElt = new Element('ul');
     resultsElt.insert(ulElt);
-    var params = {heather: true};
-    searchInputsElt.select('input').each(function (inputElt) {
-        var value = inputElt.value.strip();
-        if (!value.empty()) {
-            params[inputElt.id] = inputElt.value;
-        }
-    });
+
     var search = Remix.search(params);
     search.ulElt = ulElt;
     searchParamsElt.insert({after: resultsElt});

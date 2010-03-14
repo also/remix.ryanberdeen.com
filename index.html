@@ -2,6 +2,7 @@
 <html>
 <head>
 <title>remix</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <script src="swfobject.js" type="text/javascript"></script>
 <script src="prototype.js" type="text/javascript"></script>
 <link rel="stylesheet" href="remix.css" type="text/css" media="screen"/>
@@ -21,15 +22,55 @@
 
 <div id="right">
 <div id="controls">
-<span id="show_search_button">Search</span>
 <span id="play_button" class="button disabled">Play</span></div>
 
+<div id="simplesearch">
+<input type="search" id="simplesearch_input" placeholder="Search Tracks" autosave="com.ryanberdeen.remix.simplesearch" results ="10"/>
+<span id="show_search_button">More Options</span>
+</div>
 <div id="search_params" style="display: none">
-<h2>Search</h2>
 <form id="search_inputs">
-<input type="text" id="title"/>
-<input type="text" id="artist"/>
-<input type="text" id="query"/>
+<div class="param_group">
+<div class="param"><label>Title:</label> <input type="text" id="title"/></div>
+<div class="param"><label>Artist:</label> <input type="text" id="artist"/></div>
+<div class="param"><label>Text:</label> <input type="text" id="query"/></div>
+</div>
+
+<div class="param_group">
+<div class="param_range">
+<span class="label">Tempo:</span> <input type="text" id="constraint_tempo_min" size="5"/>–<input type="text" id="constraint_tempo_max" size="5"/>
+</div>
+
+<div class="param_range">
+<span class="label">Duration:</span> <input type="text" id="constraint_duration_min" size="5"/>–<input type="text" id="constraint_duration_max" size="5"/>
+</div>
+
+<div class="param_range">
+<span class="label">Loudness:</span> <input type="text" id="constraint_loudness_min" size="5"/>–<input type="text" id="constraint_loudness_max" size="5"/>
+</div>
+</div>
+
+<div class="param_group">
+<div class="param"><label>Mode:</label> <select id="constraint_mode"><option value="1">Major</option><option value="0">Minor</option></select></div>
+
+<div class="param"><label>Key:</label> <input type="text" id="constraint_key" size="5"/></div>
+</div>
+
+<div class="param_group">
+<div class="param_range">
+<span class="label">Familiarity:</span> <input type="text" id="constraint_familiarity_min" size="5"/>–<input type="text" id="constraint_familiarity_max" size="5"/>
+</div>
+
+<div class="param_range">
+<span class="label">Hotttnesss:</span> <input type="text" id="constraint_hotttnesss_min" size="5"/>–<input type="text" id="constraint_hotttnesss_max" size="5"/>
+</div>
+</div>
+
+<div class="param_group">
+<span class="label">Latitude:</span> <input type="text" id="constraint_latitude_min"/>–<input type="text" id="constraint_latitude_max"/>
+
+<span class="label">Longitude:</span> <input type="text" id="constraint_longitude_min"/>–<input type="text" id="constraint_longitude_max"/>
+</div>
 </form>
 <span id="search_button" class="button">Search</span>
 </div>

@@ -96,9 +96,52 @@ a:hover {
   margin: 0 0 10px 0;
 }
 
+#simplesearch {
+    background-color: #eeeeee;
+    padding: 8px;
+}
+
+#simplesearch input {
+    width: 300px;
+}
+
+#show_search_button {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 12px;
+    padding-left: 15px;
+    text-decoration: underline;
+}
+
+#show_search_button:hover {
+    color: #00aeef;
+}
+
 #search_params, .search_results {
   padding: 10px;
   border-left: 8px solid #eeeeee;
+}
+
+#search_params {
+    width: 650px;
+}
+
+#search_inputs {
+    font-size: 12px;
+}
+
+.param_group {
+    margin-bottom: 10px;
+}
+
+label, .label {
+    display: block;
+    font-weight: bold;
+}
+
+.param_range, .param {
+    display: inline-block;
+    width: 200px;
 }
 
 .search_results {
