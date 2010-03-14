@@ -182,6 +182,16 @@ label, .label {
     font-size: 12px;
 }
 
+#error {
+    background-color: #e6252e;
+    color: #fff;
+    padding: 10px;
+}
+
+#error_message {
+    margin-bottom: 8px;
+}
+
 #editor {
   background-color: #eee;
   position: absolute;

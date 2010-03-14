@@ -14,7 +14,14 @@ var playButtonElt = $('play_button');
 playButtonElt.observe('click', function (e) {Remix.togglePlayPause();});
 var tracksElt = $('tracks');
 
+$('hide_error_button').observe('click', function (e) { e.stop(); $('error').hide(); });
+
 extend(Remix, {
+    onError: function (error) {
+        $('error').show();
+        $('error_message').update(error);
+    },
+
     onTrackAdded: function (track) {
         var elt = new Element('li');
         elt.observe('click', function () {
@@ -168,7 +175,7 @@ function advancedSearch(e) {
             params[id] = value;
         }
     });
-    console.log(params);
+    Remix.log(params);
     search(params);
 }
 
