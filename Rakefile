@@ -16,7 +16,7 @@ file 'dist/site' => SRC + ['lib/remixjs/dist/remix.js', 'lib/remixjs/dist/remix.
   sh 'cp lib/remixjs/dist/remix.js dist/site'
   sh 'cp lib/remixjs/dist/remix.swf dist/site'
   sh 'cp lib/remixjs/src/editor/editor.js dist/site'
-  sh 'cp lib/swfobject/swfobject.js dist/site'
+  sh 'cp lib/remixjs/lib/swfobject/swfobject.js dist/site'
   sh 'cp lib/prototype/prototype.js dist/site'
 end
 
