@@ -1,7 +1,7 @@
 body {
   font-family: helvetica, arial, sans-serif;
   font-size: 14px;
-  margin: 20px 40px 0 40px;
+  margin: 20px 40px 40px 40px;
 }
 
 #progress-wrapper {
@@ -25,17 +25,17 @@ h1 {
 
 h2 {
     background-color: #eeeeee;
-    margin: -10px -10px 10px -10px;
+    margin: 0;
     padding: 5px;
-    font-size: 20px;
+    font-size: 16px;
 }
 
-.done_button {
+.done_button.button {
     position: absolute;
     top: 5px;
     right: 5px;
     font-size: 10px;
-    padding: 4px;
+    padding: 4px !important;
 }
 
 #left {
@@ -86,6 +86,12 @@ a:hover {
   color: #ffffff;
 }
 
+#credit {
+    position: absolute;
+    bottom: 0;
+    background-color: #fff;
+}
+
 #right {
   height: 400px;
     margin-left: 300px;
@@ -117,9 +123,18 @@ a:hover {
     color: #00aeef;
 }
 
-#search_params, .search_results {
+#search_params {
   padding: 10px;
-  border-left: 8px solid #eeeeee;
+  border-left: 1px solid #eeeeee;
+}
+
+.search_results_wrapper {
+    border-left: 1px solid #eeeeee;
+    position: relative;
+}
+
+.search_results {
+    padding: 10px;
 }
 
 #search_params {
@@ -142,10 +157,6 @@ label, .label {
 .param_range, .param {
     display: inline-block;
     width: 200px;
-}
-
-.search_results {
-    position: relative;
 }
 
 .search_results ul {
@@ -217,6 +228,7 @@ textarea {
     display: block;
     font-weight: bold;
     margin-bottom: 5px;
+    margin-right: 48px;
 }
 
 #tracks li .button {

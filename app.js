@@ -90,11 +90,21 @@ extend(Remix, {
     },
 
     onSearchResults: function (search) {
+        var ulElt = new Element('ul');
+        search.resultsElt.update(ulElt);
         search.results.each(function (result) {
             var liElt = new Element('li').update(result.title.escapeHTML() + ' by ' + result.artist.escapeHTML());
             liElt.observe('click', function (e) { load(result); });
-            search.ulElt.insert(liElt);
+            ulElt.insert(liElt);
         });
+    },
+
+    onSearchNoResults: function (search) {
+        search.resultsElt.update('Sorry, no tracks matched your search.');
+    },
+
+    onSearchError: function (search) {
+        search.resultsElt.update('Sorry, an error occurred during your search.');
     }
 });
 
@@ -167,21 +177,20 @@ $('search_inputs').observe('submit', advancedSearch);
 
 function search(params) {
     params.heather = true;
-    var resultsElt = new Element('div', {'class': 'search_results'});
+    var wrapperElt = new Element('div', {'class': 'search_results_wrapper'});
     var titleElt = new Element('h2').update('Search Results');
+    wrapperElt.insert(titleElt);
     var doneElt = new Element('span', {'class': 'button done_button'}).update('done');
     // TODO remove search object
-    doneElt.observe('click', function () { resultsElt.remove(); });
-    resultsElt.insert(doneElt);
-    resultsElt.insert(titleElt);
-    // TODO
-    //resultsElt.insert('Searching...');
-    var ulElt = new Element('ul');
-    resultsElt.insert(ulElt);
+    doneElt.observe('click', function () { wrapperElt.remove(); });
+    wrapperElt.insert(doneElt);
+    var resultsElt = new Element('div', {'class': 'search_results'});
+    wrapperElt.insert(resultsElt);
+    resultsElt.update('Searching...');
 
     var search = Remix.search(params);
-    search.ulElt = ulElt;
-    searchParamsElt.insert({after: resultsElt});
+    search.resultsElt = resultsElt;
+    searchParamsElt.insert({after: wrapperElt});
 }
 
 function load(result) {
