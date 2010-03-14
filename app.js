@@ -128,18 +128,42 @@ simplesearchInputElt.observe('search', function (e) {
 
 var searchInputsElt = $('search_inputs');
 
-$('search_button').observe('click', search);
-$('search_inputs').observe('submit', function (e) {
+var SEARCH_FIELDS = [
+    'title',
+    'artist',
+    'query',
+    'constraint_tempo_min',
+    'constraint_tempo_max',
+    'constraint_duration_min',
+    'constraint_duration_max',
+    'constraint_loudness_min',
+    'constraint_loudness_max',
+    'constraint_mode',
+    'constraint_key',
+    'constraint_familiarity_min',
+    'constraint_familiarity_max',
+    'constraint_hotttnesss_min',
+    'constraint_hotttnesss_max',
+    'constraint_latitude_min',
+    'constraint_latitude_max',
+    'constraint_longitude_min',
+    'constraint_longitude_max'];
+
+function advancedSearch(e) {
     e.stop();
     var params = {};
-    searchInputsElt.select('input').each(function (inputElt) {
-        var value = inputElt.value.strip();
+    SEARCH_FIELDS.each(function (id) {
+        var value = $(id).value.strip();
         if (!value.empty()) {
-            params[inputElt.id] = inputElt.value;
+            params[id] = value;
         }
     });
+    console.log(params);
     search(params);
-});
+}
+
+$('search_button').observe('click', advancedSearch);
+$('search_inputs').observe('submit', advancedSearch);
 
 function search(params) {
     params.heather = true;
