@@ -21,7 +21,7 @@
 
 <div id="right">
 <div id="controls"><span id="run_button">Run</span>
-<span id="play_button">Play/Pause</span></div>
+<span id="play_button" class="button disabled">Play</span></div>
 
 <div id="editor">
 <textarea id="remixJs" rows="20" cols="60">var bars = analysis.bars;
@@ -46,30 +46,36 @@ if (required) {
 }
 
 if (!required || apiKey) {
-    Remix.init(apiKey);
+    Editor.init(apiKey);
 }
 
-$('run_button').observe('click', function (e) {Remix.run();});
-$('play_button').observe('click', function (e) {Remix.togglePlayPause();});
+$('run_button').observe('click', function (e) {Editor.run();});
+var playButtonElt = $('play_button');
+playButtonElt.observe('click', function (e) {Remix.togglePlayPause();});
 var tracksElt = $('tracks');
 extend(Remix, {
     onTrackAdded: function (track) {
         var elt = new Element('li');
         var titleElt = new Element('span', {'class': 'track_title'});
         elt.insert(titleElt);
-        
+
+        var playElt = new Element('span', {'class': 'button'});
+        playElt.update('Play');
+        playElt.observe('click', function() { playTrack(track); });
+        elt.insert(playElt);
+
         var analysisStatusWrapperElt = new Element('span', {'class': 'track_analysis_status'});
         analysisStatusWrapperElt.insert('Analysis: ');
         var analysisStatusElt = new Element('span', {'class': 'value'});
         analysisStatusWrapperElt.insert(analysisStatusElt);
         elt.insert(analysisStatusWrapperElt);
-        
+
         var soundStatusWrapperElt = new Element('span', {'class': 'track_sound_status'});
         soundStatusWrapperElt.insert('Sound: ');
         var soundStatusElt = new Element('span', {'class': 'value'});
         soundStatusWrapperElt.insert(soundStatusElt);
         elt.insert(soundStatusWrapperElt);
-        
+
         titleElt.update('Track loading...');
         tracksElt.insert(elt);
         track.elt = elt;
@@ -82,20 +88,48 @@ extend(Remix, {
         track.titleElt.update(track.file.name);
         track.soundStatusElt.update('loading');
     },
-    
+
     onTrackSoundLoaded: function (track) {
         track.soundStatusElt.update('loaded');
     },
-    
+
     onTrackAnalysisLoading: function (track) {
         track.analysisStatusElt.update('loading');
     },
-    
+
     onTrackAnalysisLoaded: function (track) {
         track.analysisStatusElt.update('loaded');
+    },
+
+    onPlayerPaused: function () {
+        playButtonElt.update('Play');
+    },
+
+    onPlayerPlaying: function () {
+        playButtonElt.update('Pause');
+    },
+
+    onPlayerReady: function () {
+        playButtonElt.removeClassName('disabled');
+    },
+
+    onPlayerEmpty: function () {
+        playButtonElt.addClassName('disabled');
     }
 });
 
+function playTrack(track) {
+    if (!track.soundLoaded) {
+        return;
+    }
+    if (track.analysisLoaded) {
+        Remix.remix(track.analysis.segments);
+    }
+    else {
+        aq = {start: 0, end: track.sound.length, track: track};
+        Remix.remix([aq]);
+    }
+}
 
 </script>
 </body>
