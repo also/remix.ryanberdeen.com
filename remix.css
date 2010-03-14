@@ -23,6 +23,21 @@ h1 {
   margin-top: 30px;
 }
 
+h2 {
+    background-color: #eeeeee;
+    margin: -10px -10px 10px -10px;
+    padding: 5px;
+    font-size: 20px;
+}
+
+.done_button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 10px;
+    padding: 4px;
+}
+
 #left {
   width: 300px;
   float: left;
@@ -77,11 +92,51 @@ a:hover {
     position: relative;
 }
 
+#controls {
+  margin: 0 0 10px 0;
+}
+
+#search_params, .search_results {
+  padding: 10px;
+  border-left: 8px solid #eeeeee;
+}
+
+.search_results {
+    position: relative;
+}
+
+.search_results ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    cursor: default;
+}
+
+.search_results li:hover {
+    background-color: #00aeef;
+    color: #fff;
+}
+
+.search_results li:first-child {
+    border-top: none;
+}
+
+.search_results li {
+    border-top: 1px solid #eeeeee;
+    padding: 6px;
+    position: relative;
+    font-size: 12px;
+}
+
 #editor {
-  margin: 10px 0 0 0;
+  background-color: #eee;
   position: absolute;
   left: 0;
   right: 0;
+}
+
+#editor .button {
+    margin: 0 0 8px 8px;
 }
 
 textarea {

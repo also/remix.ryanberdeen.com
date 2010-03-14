@@ -20,8 +20,19 @@
 </div>
 
 <div id="right">
-<div id="controls"><span id="run_button">Run</span>
+<div id="controls">
+<span id="show_search_button">Search</span>
 <span id="play_button" class="button disabled">Play</span></div>
+
+<div id="search_params" style="display: none">
+<h2>Search</h2>
+<form id="search_inputs">
+<input type="text" id="title"/>
+<input type="text" id="artist"/>
+<input type="text" id="query"/>
+</form>
+<span id="search_button" class="button">Search</span>
+</div>
 
 <div id="editor">
 <textarea id="remixJs" rows="20" cols="60">var bars = analysis.bars;
@@ -32,114 +43,12 @@ for (var i = 0; i < bars.length; i++) {
 }
 
 play(samples);</textarea>
+<span id="run_button" class="button">Run</span>
 </div>
 </div>
 </div>
 
 <div id="credit"><a href="http://echonest.com"><img src="http://the.echonest.com/media/images/logos/140x50_lt.gif" alt="Powered By The Echo Nest"></a></div>
-<script type="text/javascript">
-var apiKey = null;
-var required = Remix.apiKeyRequired();
-
-if (required) {
-    apiKey = prompt('Enter your Echo Nest API key')
-}
-
-if (!required || apiKey) {
-    Editor.init(apiKey);
-}
-
-$('run_button').observe('click', function (e) {Editor.run();});
-var playButtonElt = $('play_button');
-playButtonElt.observe('click', function (e) {Remix.togglePlayPause();});
-var tracksElt = $('tracks');
-extend(Remix, {
-    onTrackAdded: function (track) {
-        var elt = new Element('li');
-        elt.observe('click', function () {
-            if (Editor.selectedTrack) {
-                Editor.selectedTrack.elt.removeClassName('selected');
-            }
-            Editor.selectedTrack = track;
-            track.elt.addClassName('selected');
-        });
-        var titleElt = new Element('span', {'class': 'track_title'});
-        elt.insert(titleElt);
-
-        var playElt = new Element('span', {'class': 'button disabled'});
-        playElt.update('Play');
-        playElt.observe('click', function() { playTrack(track); });
-        track.playElt = playElt;
-        elt.insert(playElt);
-
-        var analysisStatusWrapperElt = new Element('span', {'class': 'track_analysis_status'});
-        analysisStatusWrapperElt.insert('Analysis: ');
-        var analysisStatusElt = new Element('span', {'class': 'value'});
-        analysisStatusWrapperElt.insert(analysisStatusElt);
-        elt.insert(analysisStatusWrapperElt);
-
-        var soundStatusWrapperElt = new Element('span', {'class': 'track_sound_status'});
-        soundStatusWrapperElt.insert('Sound: ');
-        var soundStatusElt = new Element('span', {'class': 'value'});
-        soundStatusWrapperElt.insert(soundStatusElt);
-        elt.insert(soundStatusWrapperElt);
-
-        titleElt.update('Track loading...');
-        tracksElt.insert(elt);
-        track.elt = elt;
-        track.titleElt = titleElt;
-        track.analysisStatusElt = analysisStatusElt;
-        track.soundStatusElt = soundStatusElt;
-    },
-
-    onTrackSoundLoading: function (track) {
-        track.titleElt.update(track.file.name);
-        track.soundStatusElt.update('loading');
-    },
-
-    onTrackSoundLoaded: function (track) {
-        track.soundStatusElt.update('loaded');
-        track.playElt.removeClassName('disabled');
-    },
-
-    onTrackAnalysisLoading: function (track) {
-        track.analysisStatusElt.update('loading');
-    },
-
-    onTrackAnalysisLoaded: function (track) {
-        track.analysisStatusElt.update('loaded');
-    },
-
-    onPlayerPaused: function () {
-        playButtonElt.update('Play');
-    },
-
-    onPlayerPlaying: function () {
-        playButtonElt.update('Pause');
-    },
-
-    onPlayerReady: function () {
-        playButtonElt.removeClassName('disabled');
-    },
-
-    onPlayerEmpty: function () {
-        playButtonElt.addClassName('disabled');
-    }
-});
-
-function playTrack(track) {
-    if (!track.soundLoaded) {
-        return;
-    }
-    if (track.analysisLoaded) {
-        Remix.remix(track.analysis.segments);
-    }
-    else {
-        var aq = {start: 0, end: track.sound.length, track: track};
-        Remix.remix([aq]);
-    }
-}
-
-</script>
+<script type="text/javascript" src="app.js"></script>
 </body>
 </html>
