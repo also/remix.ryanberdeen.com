@@ -1,13 +1,5 @@
-var apiKey = null;
-var required = Remix.apiKeyRequired();
-
-if (required) {
-    apiKey = prompt('Enter your Echo Nest API key')
-}
-
-if (!required || apiKey) {
-    Editor.init(apiKey);
-}
+// don't steal this, asshole
+Editor.init('TFWCGFDDK8ZSK1PUA');
 
 $('run_button').observe('click', function (e) {Editor.run();});
 var playButtonElt = $('play_button');
