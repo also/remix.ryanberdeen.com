@@ -23,7 +23,7 @@ var pauseImageUrl = draw(8, 8, function (c) {
 function drawCloseImage(color) {
     return draw(14, 14, function (c) {
         c.fillStyle = color;
-        c.arc(7, 7, 7, 0, Math.PI * 2);
+        c.arc(7, 7, 7, 0, Math.PI * 2, false);
         c.fill();
         c.strokeStyle = 'white';
         c.lineWidth = 2;
