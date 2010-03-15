@@ -1,4 +1,4 @@
-SRC = FileList.new(['app.js', 'graph.js', 'index.html', 'remix.css'])
+SRC = FileList.new(['app.js', 'graph.js', 'images.js', 'index.html', 'remix.css'])
 
 file 'lib/remixjs/dist/remix.js' do
   # TODO this probably isn't right

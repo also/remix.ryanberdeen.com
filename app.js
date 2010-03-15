@@ -34,11 +34,17 @@ extend(Remix, {
         var titleElt = new Element('span', {'class': 'track_title'});
         elt.insert(titleElt);
 
-        var playElt = new Element('span', {'class': 'button disabled'});
-        playElt.update('Play');
+        var playElt = new Element('span', {'class': 'play_button button disabled'});
         playElt.observe('click', function() { playTrack(track); });
         track.playElt = playElt;
         elt.insert(playElt);
+
+        var removeElt = new Element('span', {'class': 'close_button'});
+        removeElt.observe('click', function (e) {
+            Remix.removeTrack(track);
+            track.elt.remove();
+        })
+        elt.insert(removeElt);
 
         var analysisStatusWrapperElt = new Element('span', {'class': 'track_analysis_status'});
         analysisStatusWrapperElt.insert('Analysis: ');
@@ -187,7 +193,7 @@ function search(params) {
     var wrapperElt = new Element('div', {'class': 'search_results_wrapper'});
     var titleElt = new Element('h2').update('Search Results');
     wrapperElt.insert(titleElt);
-    var doneElt = new Element('span', {'class': 'button done_button'}).update('done');
+    var doneElt = new Element('span', {'class': 'close_button'});
     // TODO remove search object
     doneElt.observe('click', function () { wrapperElt.remove(); });
     wrapperElt.insert(doneElt);
