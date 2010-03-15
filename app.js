@@ -48,7 +48,7 @@ extend(Remix, {
 
         var analysisStatusWrapperElt = new Element('span', {'class': 'track_analysis_status'});
         analysisStatusWrapperElt.insert('Analysis: ');
-        var analysisStatusElt = new Element('span', {'class': 'value'});
+        var analysisStatusElt = new Element('span', {'class': 'value'}).update('checking');
         analysisStatusWrapperElt.insert(analysisStatusElt);
         elt.insert(analysisStatusWrapperElt);
 
