@@ -87,11 +87,13 @@ extend(Remix, {
     },
 
     onPlayerPaused: function () {
-        playButtonElt.update('Play');
+        playButtonElt.removeClassName('pause_button');
+        playButtonElt.addClassName('play_button');
     },
 
     onPlayerPlaying: function () {
-        playButtonElt.update('Pause');
+        playButtonElt.addClassName('pause_button');
+        playButtonElt.removeClassName('play_button');
     },
 
     onPlayerReady: function () {

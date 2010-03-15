@@ -14,6 +14,12 @@ var playImageUrl = draw(5, 10, function (c) {
     c.fill();
 });
 
+var pauseImageUrl = draw(8, 8, function (c) {
+    c.fillStyle = 'white';
+    c.fillRect(0, 0, 3, 8);
+    c.fillRect(5, 0, 5, 8);
+});
+
 function drawCloseImage(color) {
     return draw(14, 14, function (c) {
         c.fillStyle = color;
@@ -40,6 +46,7 @@ function rule(selector, url) {
 
 document.write('<style type="text/css">'
     + rule('.play_button', playImageUrl)
+    + rule('.pause_button', pauseImageUrl)
     + rule('.close_button', closeImageUrl)
     + rule('.close_button:hover', closeHoverImageUrl)
     + '</style>');
