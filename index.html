@@ -1,7 +1,7 @@
 <!-- hi! -->
 <html>
 <head>
-<title>remix</title>
+<title>Remix</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <script src="swfobject.js" type="text/javascript"></script>
 <script src="prototype.js" type="text/javascript"></script>
@@ -26,11 +26,14 @@
 
 <div id="progress_wrapper"><div id="progress" style="width: 0%;"></div></div>
 
-<form id="simplesearch"><input type="search" id="simplesearch_input" placeholder="Search Tracks" autosave="com.ryanberdeen.remix.simplesearch" results ="10"/><input type="submit" class="firefox_form_submit_kludge"/>
+<form id="simplesearch"><input type="search" id="simplesearch_input" placeholder="Search Tracks" autosave="com.ryanberdeen.remix.simplesearch" results="10"/><input type="submit" class="firefox_form_submit_kludge"/>
 <span id="show_search_button">Advanced Search</span>
 </form>
 
-<div id="search_params" style="display: none">
+<div id="advanced_search_wrapper" style="display: none">
+<h2>Advanced Search</h2>
+<span id="hide_search_button" class="close_button"></span>
+<div id="search_params">
 <form id="search_inputs" action="#"><input type="submit" class="firefox_form_submit_kludge"/>
 <div class="param_group">
 <div class="param"><label>Title:</label> <input type="text" id="title"/></div>
@@ -76,6 +79,7 @@
 </form>
 <span id="search_button" class="button">Search</span>
 </div>
+</div>
 
 <div id="error" style="display: none">
 <div id="error_message"></div>
@@ -96,7 +100,11 @@ play(samples);</textarea>
 </div>
 </div>
 
-<div id="credit"><a href="http://echonest.com"><img src="http://the.echonest.com/media/images/logos/140x50_lt.gif" alt="Powered By The Echo Nest"></a></div>
+<div id="credit"><a href="http://echonest.com"><img src="http://the.echonest.com/media/images/logos/140x50_lt.gif" alt="Powered By The Echo Nest"></a>
+<strong>Remix</strong> was created by <a href="http://ryanberdeen.com/">Ryan Berdeen</a>
+&bull; <a href="mailto:remix@ryanberdeen.com">remix@ryanberdeen.com</a>
+&bull; Check out <strong><a href="http://github.com/also/remixjs">remixjs</a></strong> on GitHub.
+</div>
 <script type="text/javascript" src="app.js"></script>
 
 <script type="text/javascript">
