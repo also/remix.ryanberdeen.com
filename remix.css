@@ -1,19 +1,46 @@
 body {
     font-family: helvetica, arial, sans-serif;
     font-size: 14px;
-    margin: 20px 40px 40px 40px;
+    padding: 20px 40px 60px 40px;
+    position: relative;
 }
 
 h1 {
     font-size: 30px;
-    margin-top: 30px;
+    margin-top: 0px;
 }
 
-h2 {
-    background-color: #eeeeee;
-    margin: 0;
-    padding: 5px;
-    font-size: 16px;
+#remix {
+    overflow: auto;
+}
+
+#left {
+    width: 300px;
+    float: left;
+}
+
+#right {
+    margin-left: 300px;
+    position: relative;
+    border-left: 1px solid #eeeeee;
+}
+
+#credit {
+    position: absolute;
+    bottom: 0;
+    margin-top: 30px;
+    background-color: #fff;
+    font-size: 10px;
+    color: #999;
+}
+
+#credit a {
+    color: #666;
+}
+
+#credit img {
+    border: none;
+    vertical-align: middle;
 }
 
 .close_button {
@@ -26,17 +53,12 @@ h2 {
     background-position: center center;
 }
 
-#left {
-    width: 300px;
-    float: left;
-}
-
 #swf_wrapper {
     position: relative;
     display: inline-block;
 }
 
-.button, #controls span {
+.button {
     display: inline-block;
     background-color: black;
     color: white;
@@ -45,7 +67,7 @@ h2 {
     cursor: default;
 }
 
-#swf_wrapper:hover .button, .button:hover, #controls span:hover {
+#swf_wrapper:hover .button, .button:hover {
     background-color: #00aeef;
 }
 
@@ -61,29 +83,55 @@ h2 {
     height: 100%;
 }
 
-img {
-    border: none;
+#tracks {
+    list-style-type: none;
+    padding: 0;
+    margin: 10px 0 0 0;
+    cursor: default;
 }
 
-a {
-    color: #000000;
+#tracks li:first-child {
+    border-top: none;
 }
 
-a:hover {
-    background-color: #222222;
-    color: #ffffff;
-}
-
-#credit {
-    position: absolute;
-    bottom: 0;
-    background-color: #fff;
-}
-
-#right {
-    height: 400px;
-    margin-left: 300px;
+#tracks li {
+    border-top: 1px solid #eeeeee;
+    padding: 10px 10px 10px 33px;
     position: relative;
+}
+
+#tracks li.selected {
+    background-color: #eeeeee;
+}
+
+.track_title {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+#tracks li .play_button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 10px;
+    height: 10px;
+    padding: 3px;
+}
+
+#tracks li .close_button {
+    display: none;
+    top: 10px;
+}
+
+#tracks li:hover .close_button {
+    display: inline;
+}
+
+.track_sound_status, .track_analysis_status {
+    display: inline-block;
+    width: 120px;
+    font-size: 10px;
 }
 
 #controls {
@@ -138,16 +186,19 @@ a:hover {
     color: #00aeef;
 }
 
-#search_params {
-    padding: 10px;
-    border-left: 1px solid #eeeeee;
+h2 {
+    background-color: #eeeeee;
+    margin: 0;
+    padding: 5px;
+    font-size: 16px;
 }
 
+#advanced_search_wrapper,
 .search_results_wrapper {
-    border-left: 1px solid #eeeeee;
     position: relative;
 }
 
+#search_params,
 .search_results {
     padding: 10px;
 }
@@ -169,7 +220,7 @@ label, .label {
     font-weight: bold;
 }
 
-.param_range, .param {
+.param {
     display: inline-block;
     width: 200px;
 }
@@ -181,20 +232,20 @@ label, .label {
     cursor: default;
 }
 
-.search_results li:hover {
-    background-color: #00aeef;
-    color: #fff;
+.search_results li {
+    border-top: 1px solid #eeeeee;
+    padding: 6px;
+    position: relative;
+    font-size: 12px;
 }
 
 .search_results li:first-child {
     border-top: none;
 }
 
-.search_results li {
-    border-top: 1px solid #eeeeee;
-    padding: 6px;
-    position: relative;
-    font-size: 12px;
+.search_results li:hover {
+    background-color: #00aeef;
+    color: #fff;
 }
 
 #error {
@@ -209,7 +260,7 @@ label, .label {
 
 #editor {
     background-color: #eee;
-    position: absolute;
+    position: relative;
     left: 0;
     right: 0;
 }
@@ -225,58 +276,7 @@ textarea {
     font-size: 14px;
     outline: none;
     width: 100%;
-    height: 100%;
-}
-
-#tracks {
-    list-style-type: none;
-    padding: 0;
-    margin: 10px 0 0 0;
-    cursor: default;
-}
-
-#tracks li:first-child {
-    border-top: none;
-}
-
-#tracks li {
-    border-top: 1px solid #eeeeee;
-    padding: 10px 10px 10px 33px;
-    position: relative;
-}
-
-#tracks li.selected {
-    background-color: #eeeeee;
-}
-
-.track_title {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-#tracks li .play_button {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    width: 10px;
-    height: 10px;
-    padding: 3px;
-}
-
-#tracks li .close_button {
-    display: none;
-    top: 10px;
-}
-
-#tracks li:hover .close_button {
-    display: inline;
-}
-
-.track_sound_status, .track_analysis_status {
-    display: inline-block;
-    width: 120px;
-    font-size: 10px;
+    height: 400px;
 }
 
 .firefox_form_submit_kludge {

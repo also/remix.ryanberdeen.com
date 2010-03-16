@@ -128,11 +128,13 @@ function playTrack(track) {
     }
 }
 
-var searchParamsElt = $('search_params');
+var advancedSearchElt = $('advanced_search_wrapper');
 
 $('show_search_button').observe('click', function () {
-    $('search_params').toggle();
+    advancedSearchElt.show();
 });
+
+$('hide_search_button').observe('click', function (e) { advancedSearchElt.hide(); });
 
 var simplesearchInputElt = $('simplesearch_input');
 $('simplesearch').observe('submit', function (e) {
@@ -198,7 +200,7 @@ function search(params) {
 
     var search = Remix.search(params);
     search.resultsElt = resultsElt;
-    searchParamsElt.insert({after: wrapperElt});
+    advancedSearchElt.insert({after: wrapperElt});
 }
 
 function load(result) {
