@@ -135,7 +135,8 @@ $('show_search_button').observe('click', function () {
 });
 
 var simplesearchInputElt = $('simplesearch_input');
-simplesearchInputElt.observe('search', function (e) {
+$('simplesearch').observe('submit', function (e) {
+    e.stop();
     var value = simplesearchInputElt.value.strip();
     if (value.empty()) {
         return;

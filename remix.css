@@ -119,6 +119,7 @@ a:hover {
 #simplesearch {
     background-color: #eeeeee;
     padding: 8px;
+    margin: 0;
 }
 
 #simplesearch input {
@@ -276,4 +277,8 @@ textarea {
     display: inline-block;
     width: 120px;
     font-size: 10px;
+}
+
+.firefox_form_submit_kludge {
+    display: none;
 }

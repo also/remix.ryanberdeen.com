@@ -26,13 +26,12 @@
 
 <div id="progress_wrapper"><div id="progress" style="width: 0%;"></div></div>
 
-<div id="simplesearch">
-<input type="search" id="simplesearch_input" placeholder="Search Tracks" autosave="com.ryanberdeen.remix.simplesearch" results ="10"/>
+<form id="simplesearch"><input type="search" id="simplesearch_input" placeholder="Search Tracks" autosave="com.ryanberdeen.remix.simplesearch" results ="10"/><input type="submit" class="firefox_form_submit_kludge"/>
 <span id="show_search_button">Advanced Search</span>
-</div>
+</form>
 
 <div id="search_params" style="display: none">
-<form id="search_inputs">
+<form id="search_inputs" action="#"><input type="submit" class="firefox_form_submit_kludge"/>
 <div class="param_group">
 <div class="param"><label>Title:</label> <input type="text" id="title"/></div>
 <div class="param"><label>Artist:</label> <input type="text" id="artist"/></div>
