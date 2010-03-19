@@ -1,0 +1,131 @@
+<div class="section">
+<h2>Selection</h2>
+<dl>
+
+<dt><code>areContainedByRange(start, end)</code>, <code>areContainedBy(audioQuantum)</code></dt>
+<dd>
+<p>Select quanta that begin <strong>and</strong> end in the specified range.</p>
+<pre><code></code></pre>
+</dd>
+
+<dt><code>overlapRange(start, end)</code>, <code>overlap(audioQuantum)</code></dt>
+<dd>
+<p>Select quanta that begin <strong>or</strong> end in the specified range.</p>
+<pre><code></code></pre>
+</dd>
+
+<dt><code>endDuringRange(start, end)</code>, <code>endDuring(audioQuantum)</code></dt>
+<dd>
+<p>Select quanta that end in the specified range.</p>
+<pre><code></code></pre>
+</dd>
+
+<dt><code>startDuringRange(start, end)</code>, <code>startDuring(audioQuantum)</code></dt>
+<dd>
+<p>Select quanta that start in the specified range.</p>
+<pre><code></code></pre>
+</dd>
+
+<dt><code>containPoint(point)</code></dt>
+<dd>
+<p>Select quanta that contain the specified point.</p>
+<pre><code></code></pre>
+</dd>
+
+<dt><code>havePitchMax(pitchMax)</code></dt>
+<dd>
+<p>Select quanta whose dominant pitch is at the specified index.</p>
+<pre><code></code></pre>
+</dd>
+
+<dt><code>havePitchesMax(pitchesMax)</code></dt>
+<dd>
+<p>Select quanta whose dominant pitch is at one of the specified indices.</p>
+<pre><code></code></pre>
+</dd>
+
+<dt><code>lieImmediatelyBefore(audioQuantum)</code></dt>
+<dd>
+<p>Select quanta that end at the start of the specified range.</p>
+<pre><code></code></pre>
+</dd>
+
+<dt><code>lieImmediatelyAfter(audioQuantum)</code></dt>
+<dd>
+<p>Select quanta that start at the end of the specified range.</p>
+<pre><code></code></pre>
+</dd>
+
+<dt><code>fallOnThe(number)</code></dt>
+<dd>
+<p>Select quanta that fall on the specified <strong>one-indexed</strong> position within their group.</p>
+<pre><code></code></pre>
+</dd>
+
+<dt><code>overlapEndsOf(audioQuanta)</code></dt>
+<dd>
+<p></p>
+<pre><code></code></pre>
+</dd>
+
+<dt><code>overlapStartsOf(audioQuanta)</code></dt>
+<dd>
+<p></p>
+<pre><code></code></pre>
+</dd>
+
+<dt><code>startDuringAny(audioQuanta)</code></dt>
+<dd>
+<p></p>
+<pre><code></code></pre>
+</dd>
+</dl>
+</div>
+
+<div class="section">
+<h2>Sorting</h2>
+<dl>
+<dt><code>confidence</code></dt>
+<dd>
+<p>Use the confidence value.</p>
+<pre><code>play(analysis.segments.orderedBy(confidence, true));</code></pre>
+</dd>
+
+<dt><code>duration</code></dt>
+<dd>
+<p>Use the duration of the segment.</p>
+<pre><code>play(analysis.segments.orderedBy(duration));</code></pre>
+</dd>
+
+<dt><code>timbreValue(index)</code></dt>
+<dd>
+<p>Use the timbre at the specified index.</p>
+<pre><code>play(analysis.segments.orderedBy(timbreValue(0), true));</code></pre>
+</dd>
+
+<dt><code>pitchValue(index)</code></dt>
+<dd>
+<p>Use the pitch at the specified index.</p>
+<pre><code>play(analysis.segments.orderedBy(pitchValue(1), true));</code></pre>
+</dd>
+
+<dt><code>pitchDistanceFrom(segment)</code></dt>
+<dd>
+<p>Use the pitch distance from the specified segment.</p>
+<pre><code></code></pre>
+</dd>
+
+<dt><code>timbreDistanceFrom(segment)</code></dt>
+<dd>
+<p>Use the timbre distance from the specified segment.</p>
+<pre><code></code></pre>
+</dd>
+
+<dt><code>noisiness</code></dt>
+<dd>
+<p>Use the noisiness. The noisiness is approximated using the sum of the 12 pitch vectors.</p>
+<pre><code></code></pre>
+</dd>
+</dl>
+</div>
+
