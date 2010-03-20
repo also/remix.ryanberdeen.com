@@ -1,4 +1,10 @@
-SRC = FileList.new(['app.js', 'common.css', 'graph.js', 'help.css', 'images.js', 'index.html', 'reference.html', 'remix.css'])
+STATIC_HTML = FileList.new('*.html')
+STATIC_JS = FileList.new('*.js')
+STATIC_CSS = FileList.new('*.css')
+LIB_JS = FileList.new(['lib/remixjs/dist/remix.js', 'lib/remixjs/src/editor/editor.js', 'lib/remixjs/lib/swfobject/swfobject.js', 'lib/sylvester/sylvester.js', 'lib/jslint/fulljslint.js', 'lib/prototype/prototype.js'])
+LIB_SWF = 'lib/remixjs/dist/remix.swf'
+
+ALL = STATIC_HTML + STATIC_JS + STATIC_CSS + LIB_JS + LIB_JS + [LIB_SWF]
 
 file 'lib/remixjs/dist/remix.js' do
   # TODO this probably isn't right
@@ -10,14 +16,9 @@ file 'lib/remixjs/dist/remix.swf' do
   sh 'cd lib/remixjs; rake dist/remix.swf'
 end
 
-file 'dist/site' => SRC + ['lib/remixjs/dist/remix.js', 'lib/remixjs/dist/remix.swf'] do
+file 'dist/site' => ALL do
   sh 'mkdir -p dist/site'
-  sh "cp #{SRC} dist/site"
-  sh 'cp lib/remixjs/dist/remix.js dist/site'
-  sh 'cp lib/remixjs/dist/remix.swf dist/site'
-  sh 'cp lib/remixjs/src/editor/editor.js dist/site'
-  sh 'cp lib/remixjs/lib/swfobject/swfobject.js dist/site'
-  sh 'cp lib/prototype/prototype.js dist/site'
+  sh "cp #{ALL} dist/site"
 end
 
 task :default => ['dist/site']
