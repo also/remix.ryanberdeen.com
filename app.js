@@ -231,3 +231,7 @@ Editor.getScript = function () {
     }
     return script;
 }
+
+DLR.autoAdd = false;
+DLR.path = 'gestalt';
+DLR.createSilverlightObject({reportErrors: false});
