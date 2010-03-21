@@ -208,3 +208,26 @@ function load(result) {
     track.searchResult = result;
     track.titleElt.update(result.title.escapeHTML() + ' by ' + result.artist.escapeHTML());
 }
+
+var JSLINT_OPTIONS = {debug: true, evil: true, laxbreak: true, forin: true, sub: true, css: true, cap: true, on: true, fragment: true};
+
+Editor.getRawScript = Editor.getScript;
+
+Editor.getScript = function () {
+    var script = Editor.getRawScript();
+    if (!JSLINT(script, JSLINT_OPTIONS)) {
+        var lint = JSLINT.errors;
+        var errorMessage = '';
+        for (var i = 0; i < lint.length; i++) {
+            var error = lint[i];
+            if (error && error.raw && error.raw != 'Missing semicolon.') {
+                errorMessage += '<p><strong>At line ' + error.line + ', character ' + error.character + ': ' + error.reason.escapeHTML() + '</strong>' + '<br/><code>' + error.evidence.escapeHTML() + '</code></p>';
+            }
+        }
+        if (errorMessage.length > 0) {
+            Remix.onError(errorMessage);
+            return null;
+        }
+    }
+    return script;
+}
