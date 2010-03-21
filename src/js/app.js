@@ -243,7 +243,7 @@ function run() {
             var result = pyeval(script);
         }
         catch (e) {
-            Remix.onError('<pre style="overflow: scroll">' + e + '</pre>');
+            Remix.onError('<pre style="overflow: auto">' + e.escapeHTML() + '</pre>');
         }
     }
 }
