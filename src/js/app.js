@@ -1,7 +1,7 @@
 // don't steal this, asshole
 Editor.init('TFWCGFDDK8ZSK1PUA');
 
-$('run_button').observe('click', function (e) {Editor.run();});
+$('run_button').observe('click', function (e) {run();});
 var playButtonElt = $('play_button');
 playButtonElt.observe('click', function (e) {Remix.togglePlayPause();});
 var tracksElt = $('tracks');
@@ -230,6 +230,23 @@ Editor.getScript = function () {
         }
     }
     return script;
+}
+
+function run() {
+    var language = $('language').value;
+    if (language == 'js') {
+        Editor.run();
+    }
+    else {
+        var script = Editor.getRawScript();
+        try {
+            var result = pyeval(script);
+        }
+        catch (e) {
+            Remix.onError('<pre style="overflow: scroll">' + e + '</pre>');
+        }
+        console.log(result);
+    }
 }
 
 DLR.autoAdd = false;
