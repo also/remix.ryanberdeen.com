@@ -245,7 +245,6 @@ function run() {
         catch (e) {
             Remix.onError('<pre style="overflow: scroll">' + e + '</pre>');
         }
-        console.log(result);
     }
 }
 
