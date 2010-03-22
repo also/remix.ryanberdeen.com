@@ -8,9 +8,11 @@ def log(m):
 
 EXCLUDE_TYPES = set(['module', 'namespace#', 'function', 'classobj'])
 
+cache = {}
+
 def pyeval(s, e):
     try:
-        g = {}
+        g = {'window': window, 'log': log, 'cache': cache}
         exec window.__pyevalarg in g
         g.pop('__builtins__')
         result = {}
@@ -43,3 +45,5 @@ def pyeval(s, e):
         window.__pyevalexception = repr({'ex': ex, 'traceback': filtered_tb})
 
 window.__pyevalfn = System.EventHandler[System.Windows.Browser.HtmlEventArgs](pyeval)
+
+sys.path.append('remixpy')

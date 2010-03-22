@@ -240,7 +240,8 @@ function run() {
     else {
         var script = Editor.getRawScript();
         try {
-            var result = pyeval(script);
+            var header = "import jsbridge\nfrom System import Array\ndef remix(aqs):\n    s = jsbridge.buildMixSpecString(aqs)\n    window.Remix.Invoke('remixString', Array[object]([s]))\ntracks = jsbridge.TrackList(window.Remix._tracks)\n"
+            var result = pyeval(header + script);
         }
         catch (e) {
             Remix.onError('<pre style="overflow: auto">' + e.escapeHTML() + '</pre>');
