@@ -135,7 +135,6 @@ function updateTrack(track) {
 }
 
 var analysisCanvas;
-var selection = {};
 
 function updateTrackInfo(track) {
     trackInfoElt.update();
@@ -145,7 +144,7 @@ function updateTrackInfo(track) {
         analysisCanvas.observe('mousedown', onAnalysisMouseDown);
         drawAnalysis(track);
         trackInfoElt.insert(analysisCanvas);
-        selection = {track: track};
+        track.selection = {track: track};
     }
 }
 
@@ -173,7 +172,7 @@ function onAnalysisMouseDown(e) {
     var track = Editor.selectedTrack;
     var scale = analysisCanvas.width / track.analysis.duration;
     var x = e.pointerX() - analysisCanvas.cumulativeOffset().left + analysisCanvas.cumulativeScrollOffset().left;
-    selection.start = x / scale;
+    track.selection.start = x / scale;
     $(document).observe('mouseup', onAnalysisMouseUp);
     $(document).observe('mousemove', onAnalysisMouseMove);
 }
@@ -183,6 +182,7 @@ function onAnalysisMouseUp(e) {
     var track = Editor.selectedTrack;
     var scale = analysisCanvas.width / track.analysis.duration;
     var x = e.pointerX() - analysisCanvas.cumulativeOffset().left + analysisCanvas.cumulativeScrollOffset().left;
+    var selection = track.selection;
     selection.end = x / scale;
     $(document).stopObserving('mouseup', onAnalysisMouseUp);
     $(document).stopObserving('mousemove', onAnalysisMouseMove);
@@ -198,6 +198,7 @@ function onAnalysisMouseUp(e) {
 function onAnalysisMouseMove(e) {
     e.stop();
     var track = Editor.selectedTrack;
+    var selection = track.selection;
     var scale = analysisCanvas.width / track.analysis.duration;
     var x = e.pointerX() - analysisCanvas.cumulativeOffset().left + analysisCanvas.cumulativeScrollOffset().left;
     selection.end = x / scale;
@@ -206,6 +207,8 @@ function onAnalysisMouseMove(e) {
 
 function drawSelection() {
     var canvas = analysisCanvas;
+    var track = Editor.selectedTrack;
+    var selection = track.selection;
     var track = Editor.selectedTrack;
     var scale = canvas.width / track.analysis.duration;
     var left = selection.start * scale;
@@ -251,7 +254,7 @@ $('simplesearch').observe('submit', function (e) {
     if (value.empty()) {
         return;
     }
-    search({title: value, artist: value});
+    search({combined: value});
 });
 
 var searchInputsElt = $('search_inputs');
@@ -293,8 +296,10 @@ function advancedSearch(e) {
 $('search_button').observe('click', advancedSearch);
 $('search_inputs').observe('submit', advancedSearch);
 
+var defaultParams = {heather: true};
+
 function search(params) {
-    params.heather = true;
+    params = extend(extend({}, defaultParams), params);
     var wrapperElt = new Element('div', {'class': 'search_results_wrapper'});
     var titleElt = new Element('h2').update('Search Results');
     wrapperElt.insert(titleElt);
