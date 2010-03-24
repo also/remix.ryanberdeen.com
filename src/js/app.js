@@ -240,7 +240,7 @@ function run() {
     else {
         var script = Editor.getRawScript();
         try {
-            var header = "import jsbridge\nfrom System import Array\ndef remix(aqs):\n    s = jsbridge.buildMixSpecString(aqs)\n    window.Remix.Invoke('remixString', Array[object]([s]))\ntracks = jsbridge.TrackList(window.Remix._tracks)\n"
+            var header = "import jsbridge\nfrom System import Array\ndef play(aqs):\n    s = jsbridge.buildMixSpecString(aqs)\n    window.Remix.Invoke('remixString', Array[object]([s]))\ntracks = jsbridge.TrackList(window.Remix._tracks)\n"
             var result = pyeval(header + script);
         }
         catch (e) {
