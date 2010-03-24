@@ -16,13 +16,11 @@ extend(Remix, {
 
     onTrackAdded: function (track) {
         var elt = new Element('li');
-        elt.observe('click', function () {
-            if (Editor.selectedTrack) {
-                Editor.selectedTrack.elt.removeClassName('selected');
-            }
-            Editor.selectedTrack = track;
-            track.elt.addClassName('selected');
+        elt.observe('click', function (e) {
+            e.stop();
+            onTrackSelected(track);
         });
+
         var titleElt = new Element('span', {'class': 'track_title'});
         elt.insert(titleElt);
 
@@ -50,7 +48,8 @@ extend(Remix, {
         soundStatusWrapperElt.insert(soundStatusElt);
         elt.insert(soundStatusWrapperElt);
 
-        titleElt.update('Track loading...');
+        track.displayTitle = 'Track loading...';
+        titleElt.update(track.displayTitle);
         tracksElt.insert(elt);
         track.elt = elt;
         track.titleElt = titleElt;
@@ -60,7 +59,8 @@ extend(Remix, {
 
     onTrackSoundLoading: function (track) {
         if (track.file.name) {
-            track.titleElt.update(track.file.name);
+            track.displayTitle = track.file.name;
+            updateTrack(track);
         }
         track.soundStatusElt.update('loading');
     },
@@ -76,6 +76,7 @@ extend(Remix, {
 
     onTrackAnalysisLoaded: function (track) {
         track.analysisStatusElt.update('loaded');
+        updateTrack(track);
     },
 
     onPlayerPaused: function () {
@@ -114,6 +115,113 @@ extend(Remix, {
         search.resultsElt.update('Sorry, an error occurred during your search.');
     }
 });
+
+function onTrackSelected(track) {
+    if (Editor.selectedTrack) {
+        Editor.selectedTrack.elt.removeClassName('selected');
+    }
+    Editor.selectedTrack = track;
+    track.elt.addClassName('selected');
+    updateTrackInfo(track);
+}
+
+var trackInfoElt = $('track_info');
+
+function updateTrack(track) {
+    track.titleElt.update(track.displayTitle.escapeHTML());
+    if (track == Editor.selectedTrack) {
+        updateTrackInfo(track);
+    }
+}
+
+var analysisCanvas;
+var selection = {};
+
+function updateTrackInfo(track) {
+    trackInfoElt.update();
+    //trackInfoElt.update(track.displayTitle.escapeHTML());
+    if (track.analysisLoaded) {
+        analysisCanvas = new Element('canvas', {width: trackInfoElt.getWidth() * 3, height: '100'});
+        analysisCanvas.observe('mousedown', onAnalysisMouseDown);
+        drawAnalysis(track);
+        trackInfoElt.insert(analysisCanvas);
+        selection = {track: track};
+    }
+}
+
+var pitchColors = ["47, 255, 0", "160, 255, 0", "255, 227, 0", "255, 90, 0", "255, 0, 0", "255, 0, 0", "167, 0, 0", "98, 0, 181", "67, 0, 242", "0, 0, 255", "0, 132, 255", "0, 255, 216"];
+
+function drawAnalysis(track) {
+    var canvas = analysisCanvas;
+    var ctx = canvas.getContext('2d');
+    var scale = canvas.width / track.analysis.duration;
+    var segs = track.analysis.segments;
+    var offsetTop = 10;
+    var height = (canvas.height - offsetTop) / 12;
+    for (var i = 0; i < segs.length; i++) {
+        var s = segs[i];
+        for (var j = 0; j < 12; j++) {
+            var p = s.pitches[j];
+            ctx.fillStyle = 'rgba(' + pitchColors[j] + ', ' + p + ')';
+            ctx.fillRect(s.start * scale, j * height + offsetTop, s.duration * scale, height);
+        }
+    }
+}
+
+function onAnalysisMouseDown(e) {
+    e.stop();
+    var track = Editor.selectedTrack;
+    var scale = analysisCanvas.width / track.analysis.duration;
+    var x = e.pointerX() - analysisCanvas.cumulativeOffset().left + analysisCanvas.cumulativeScrollOffset().left;
+    selection.start = x / scale;
+    $(document).observe('mouseup', onAnalysisMouseUp);
+    $(document).observe('mousemove', onAnalysisMouseMove);
+}
+
+function onAnalysisMouseUp(e) {
+    e.stop();
+    var track = Editor.selectedTrack;
+    var scale = analysisCanvas.width / track.analysis.duration;
+    var x = e.pointerX() - analysisCanvas.cumulativeOffset().left + analysisCanvas.cumulativeScrollOffset().left;
+    selection.end = x / scale;
+    $(document).stopObserving('mouseup', onAnalysisMouseUp);
+    $(document).stopObserving('mousemove', onAnalysisMouseMove);
+    if (selection.end < selection.start) {
+        var start = selection.end;
+        selection.end = selection.start;
+        selection.start = start;
+    }
+    drawSelection();
+    Remix.remix([selection]);
+}
+
+function onAnalysisMouseMove(e) {
+    e.stop();
+    var track = Editor.selectedTrack;
+    var scale = analysisCanvas.width / track.analysis.duration;
+    var x = e.pointerX() - analysisCanvas.cumulativeOffset().left + analysisCanvas.cumulativeScrollOffset().left;
+    selection.end = x / scale;
+    drawSelection();
+}
+
+function drawSelection() {
+    var canvas = analysisCanvas;
+    var track = Editor.selectedTrack;
+    var scale = canvas.width / track.analysis.duration;
+    var left = selection.start * scale;
+    var right = selection.end * scale;
+    var ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, 10);
+    ctx.strokeStyle = 'rgb(0, 174, 239)';
+    ctx.fillStyle = 'rgba(0, 174, 239, 0.5)';
+    ctx.fillRect(left, 0, right - left, 10);
+    // ctx.moveTo(left, 0);
+    // ctx.lineTo(left, 10);
+    // ctx.stroke();
+    // ctx.moveTo(right, 0);
+    // ctx.lineTo(right, 10);
+    // ctx.stroke();
+}
 
 function playTrack(track) {
     if (!track.soundLoaded) {
@@ -206,7 +314,8 @@ function search(params) {
 function load(result) {
     var track = Remix.load(result.url, result.trackID);
     track.searchResult = result;
-    track.titleElt.update(result.title.escapeHTML() + ' by ' + result.artist.escapeHTML());
+    track.displayTitle = result.title + ' by ' + result.artist;
+    updateTrack(track);
 }
 
 var JSLINT_OPTIONS = {debug: true, evil: true, laxbreak: true, forin: true, sub: true, css: true, cap: true, on: true, fragment: true};

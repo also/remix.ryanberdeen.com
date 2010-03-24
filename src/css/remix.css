@@ -218,6 +218,15 @@ label, .label {
     color: #fff;
 }
 
+#track_info {
+    overflow: auto;
+}
+
+/* TODO more specific */
+#track_info canvas {
+    cursor: text;
+}
+
 #error {
     background-color: #e6252e;
     color: #fff;
