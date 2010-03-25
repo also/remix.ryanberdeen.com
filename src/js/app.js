@@ -1,3 +1,4 @@
+(function () {
 // don't steal this, asshole
 Editor.init('TFWCGFDDK8ZSK1PUA');
 
@@ -357,3 +358,4 @@ Editor.getScript = function () {
     }
     return script;
 }
+})();
