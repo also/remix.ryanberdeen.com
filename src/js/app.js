@@ -135,6 +135,7 @@ function updateTrack(track) {
 }
 
 var analysisCanvas;
+var analysisCanvasScale = 10;
 
 function updateTrackInfo(track) {
     trackInfoElt.update();
@@ -142,6 +143,7 @@ function updateTrackInfo(track) {
     if (track.analysisLoaded) {
         analysisCanvas = new Element('canvas', {width: trackInfoElt.getWidth() * 3, height: '100'});
         analysisCanvas.observe('mousedown', onAnalysisMouseDown);
+        analysisCanvas.observe('mousewheel', onAnalysisMouseWheel);
         drawAnalysis(track);
         trackInfoElt.insert(analysisCanvas);
         track.selection = {track: track};
@@ -151,28 +153,33 @@ function updateTrackInfo(track) {
 var pitchColors = ["47, 255, 0", "160, 255, 0", "255, 227, 0", "255, 90, 0", "255, 0, 0", "255, 0, 0", "167, 0, 0", "98, 0, 181", "67, 0, 242", "0, 0, 255", "0, 132, 255", "0, 255, 216"];
 
 function drawAnalysis(track) {
+    var track = Editor.selectedTrack;
     var canvas = analysisCanvas;
+    canvas.width = analysisCanvasScale * track.analysis.duration;
     var ctx = canvas.getContext('2d');
-    var scale = canvas.width / track.analysis.duration;
     var segs = track.analysis.segments;
     var offsetTop = 10;
     var height = (canvas.height - offsetTop) / 12;
+    ctx.clearRect(0, 10, canvas.width, canvas.height - 10);
     for (var i = 0; i < segs.length; i++) {
         var s = segs[i];
         for (var j = 0; j < 12; j++) {
             var p = s.pitches[j];
             ctx.fillStyle = 'rgba(' + pitchColors[j] + ', ' + p + ')';
-            ctx.fillRect(s.start * scale, j * height + offsetTop, s.duration * scale, height);
+            ctx.fillRect(s.start * analysisCanvasScale, j * height + offsetTop, s.duration * analysisCanvasScale, height);
         }
     }
+}
+
+function analysisPosition(e) {
+    return e.pointerX() - analysisCanvas.cumulativeOffset().left + analysisCanvas.cumulativeScrollOffset().left;
 }
 
 function onAnalysisMouseDown(e) {
     e.stop();
     var track = Editor.selectedTrack;
-    var scale = analysisCanvas.width / track.analysis.duration;
-    var x = e.pointerX() - analysisCanvas.cumulativeOffset().left + analysisCanvas.cumulativeScrollOffset().left;
-    track.selection.start = x / scale;
+    var x = analysisPosition(e);
+    track.selection.start = x / analysisCanvasScale;
     $(document).observe('mouseup', onAnalysisMouseUp);
     $(document).observe('mousemove', onAnalysisMouseMove);
 }
@@ -180,10 +187,9 @@ function onAnalysisMouseDown(e) {
 function onAnalysisMouseUp(e) {
     e.stop();
     var track = Editor.selectedTrack;
-    var scale = analysisCanvas.width / track.analysis.duration;
-    var x = e.pointerX() - analysisCanvas.cumulativeOffset().left + analysisCanvas.cumulativeScrollOffset().left;
+    var x = analysisPosition(e);
     var selection = track.selection;
-    selection.end = x / scale;
+    selection.end = x / analysisCanvasScale;
     $(document).stopObserving('mouseup', onAnalysisMouseUp);
     $(document).stopObserving('mousemove', onAnalysisMouseMove);
     if (selection.end < selection.start) {
@@ -199,10 +205,17 @@ function onAnalysisMouseMove(e) {
     e.stop();
     var track = Editor.selectedTrack;
     var selection = track.selection;
-    var scale = analysisCanvas.width / track.analysis.duration;
-    var x = e.pointerX() - analysisCanvas.cumulativeOffset().left + analysisCanvas.cumulativeScrollOffset().left;
-    selection.end = x / scale;
+    var x = analysisPosition(e);
+    selection.end = x / analysisCanvasScale;
     drawSelection();
+}
+
+function onAnalysisMouseWheel(e) {
+    if (Math.abs(e.wheelDeltaY) > 0 && Math.abs(e.wheelDeltaX) < 10) {
+        e.stop();
+        analysisCanvasScale += e.wheelDeltaY / 200;
+        drawAnalysis();
+    }
 }
 
 function drawSelection() {
@@ -210,9 +223,8 @@ function drawSelection() {
     var track = Editor.selectedTrack;
     var selection = track.selection;
     var track = Editor.selectedTrack;
-    var scale = canvas.width / track.analysis.duration;
-    var left = selection.start * scale;
-    var right = selection.end * scale;
+    var left = selection.start * analysisCanvasScale;
+    var right = selection.end * analysisCanvasScale;
     var ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, 10);
     ctx.strokeStyle = 'rgb(0, 174, 239)';
