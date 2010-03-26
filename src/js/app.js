@@ -148,9 +148,9 @@ function updateTrackInfo(track) {
         analysisCanvas = new Element('canvas', {width: trackInfoElt.getWidth() * 3, height: '100'});
         analysisCanvas.observe('mousedown', onAnalysisMouseDown);
         analysisCanvas.observe('mousewheel', onAnalysisMouseWheel);
+        track.selection = {track: track, start: 0, end: 0};
         drawAnalysis(track);
         trackInfoElt.insert(analysisCanvas);
-        track.selection = {track: track};
     }
 }
 
@@ -173,6 +173,7 @@ function drawAnalysis(track) {
             ctx.fillRect(s.start * analysisCanvasScale, j * height + offsetTop, s.duration * analysisCanvasScale, height);
         }
     }
+    drawSelection();
 }
 
 function analysisPosition(e) {
