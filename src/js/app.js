@@ -217,12 +217,19 @@ function onAnalysisMouseMove(e) {
     drawSelection();
 }
 
+var drawAnalysisTimeout = null;
+
 function onAnalysisMouseWheel(e) {
     if (Math.abs(e.wheelDeltaY) > 0 && Math.abs(e.wheelDeltaX) < 10) {
         e.stop();
+        if (drawAnalysisTimeout) {
+            clearTimeout(drawAnalysisTimeout);
+        }
         var pos = analysisPosition(e);
         analysisCanvasScale += e.wheelDeltaY / 200;
-        drawAnalysis();
+        // OH FUCK YES
+        analysisCanvas.style.width = analysisCanvasScale * Editor.selectedTrack.analysis.duration + 'px';
+        drawAnalysisTimeout = setTimeout(drawAnalysis, 300);
         positionAnalysis(e.pointerX() - analysisCanvas.cumulativeOffset().left, pos);
     }
 }
