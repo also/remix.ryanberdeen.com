@@ -15,6 +15,7 @@ extend(Remix, {
         $('error_message').update(error);
     },
 
+/// TRACK LIST
     onTrackAdded: function (track) {
         var elt = new Element('li');
         elt.observe('click', function (e) {
@@ -80,6 +81,7 @@ extend(Remix, {
         updateTrack(track);
     },
 
+/// PLAYER
     onPlayerPaused: function () {
         playButtonElt.removeClassName('pause_button');
         playButtonElt.addClassName('play_button');
@@ -98,6 +100,7 @@ extend(Remix, {
         playButtonElt.addClassName('disabled');
     },
 
+/// SEARCH
     onSearchResults: function (search) {
         var ulElt = new Element('ul');
         search.resultsElt.update(ulElt);
