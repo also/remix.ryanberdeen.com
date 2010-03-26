@@ -176,14 +176,18 @@ function drawAnalysis(track) {
 }
 
 function analysisPosition(e) {
-    return e.pointerX() - analysisCanvas.cumulativeOffset().left + analysisCanvas.cumulativeScrollOffset().left;
+    return (e.pointerX() - analysisCanvas.cumulativeOffset().left + analysisCanvas.cumulativeScrollOffset().left) / analysisCanvasScale;
+}
+
+function positionAnalysis(offset, target) {
+    var scaledTarget = target * analysisCanvasScale;
+    trackInfoElt.scrollLeft = scaledTarget - offset;
 }
 
 function onAnalysisMouseDown(e) {
     e.stop();
     var track = Editor.selectedTrack;
-    var x = analysisPosition(e);
-    track.selection.start = x / analysisCanvasScale;
+    track.selection.start = analysisPosition(e);
     $(document).observe('mouseup', onAnalysisMouseUp);
     $(document).observe('mousemove', onAnalysisMouseMove);
 }
@@ -191,9 +195,8 @@ function onAnalysisMouseDown(e) {
 function onAnalysisMouseUp(e) {
     e.stop();
     var track = Editor.selectedTrack;
-    var x = analysisPosition(e);
     var selection = track.selection;
-    selection.end = x / analysisCanvasScale;
+    selection.end = analysisPosition(e);
     $(document).stopObserving('mouseup', onAnalysisMouseUp);
     $(document).stopObserving('mousemove', onAnalysisMouseMove);
     if (selection.end < selection.start) {
@@ -209,16 +212,17 @@ function onAnalysisMouseMove(e) {
     e.stop();
     var track = Editor.selectedTrack;
     var selection = track.selection;
-    var x = analysisPosition(e);
-    selection.end = x / analysisCanvasScale;
+    selection.end = analysisPosition(e);
     drawSelection();
 }
 
 function onAnalysisMouseWheel(e) {
     if (Math.abs(e.wheelDeltaY) > 0 && Math.abs(e.wheelDeltaX) < 10) {
         e.stop();
+        var pos = analysisPosition(e);
         analysisCanvasScale += e.wheelDeltaY / 200;
         drawAnalysis();
+        positionAnalysis(e.pointerX() - analysisCanvas.cumulativeOffset().left, pos);
     }
 }
 
