@@ -1,3 +1,11 @@
+body {
+    padding-bottom: 84px;
+}
+
+#credit {
+    bottom: 24px;
+}
+
 #remix {
     overflow: auto;
 }
@@ -105,8 +113,13 @@
 }
 
 #controls {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
     background-color: #eeeeee;
     padding: 4px;
+    z-index: 1;
 }
 
 .play_button, .pause_button {
@@ -121,12 +134,13 @@
 }
 
 #progress_wrapper {
-    position: absolute;
-    top: 4px;
+    position: fixed;
+    bottom: 4px;
     left: 24px;
     right: 4px;
     height: 16px;
     background-color: #222222;
+    z-index: 1;
 }
 
 #progress {

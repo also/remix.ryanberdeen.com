@@ -230,6 +230,7 @@ function onAnalysisMouseWheel(e) {
         // OH FUCK YES
         analysisCanvas.style.width = analysisCanvasScale * Editor.selectedTrack.analysis.duration + 'px';
         drawAnalysisTimeout = setTimeout(drawAnalysis, 300);
+        // FIXME not working
         positionAnalysis(e.pointerX() - analysisCanvas.cumulativeOffset().left, pos);
     }
 }
