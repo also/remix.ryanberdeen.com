@@ -122,19 +122,22 @@ function drawSelection() {
     var track = Editor.selectedTrack;
     var selection = track.selection;
     var track = Editor.selectedTrack;
-    var left = selection.start * analysisCanvasScale;
-    var right = selection.end * analysisCanvasScale;
+    var left = Math.round(selection.start * analysisCanvasScale) + 0.5;
+    var right = Math.round(selection.end * analysisCanvasScale) + 0.5;
     var ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.getWidth(), 10);
     ctx.strokeStyle = 'rgb(0, 174, 239)';
     ctx.fillStyle = 'rgba(0, 174, 239, 0.5)';
     ctx.fillRect(left, 0, right - left, 10);
-    // ctx.moveTo(left, 0);
-    // ctx.lineTo(left, 10);
-    // ctx.stroke();
-    // ctx.moveTo(right, 0);
-    // ctx.lineTo(right, 10);
-    // ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(left, 0);
+    ctx.lineTo(left, 10);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(right, 0);
+    ctx.lineTo(right, 10);
+    ctx.stroke();
 }
 
 return {
