@@ -248,11 +248,11 @@ function onAnalysisMouseWheel(e) {
             clearTimeout(drawAnalysisTimeout);
         }
         var pos = analysisPosition(e);
-        analysisCanvasScale += e.wheelDeltaY / 200;
-        // OH FUCK YES
-        analysisCanvas.style.width = analysisCanvasScale * Editor.selectedTrack.analysis.duration + 'px';
+        var targetScale = analysisCanvasScale + e.wheelDeltaY / 200;
+        var newWidth = Math.floor(targetScale * Editor.selectedTrack.analysis.duration)
+        analysisCanvasScale = newWidth / Editor.selectedTrack.analysis.duration;
+        analysisCanvas.style.width = newWidth + 'px';
         drawAnalysisTimeout = setTimeout(drawAnalysis, 300);
-        // FIXME not working
         positionAnalysis(e.pointerX() - analysisCanvas.cumulativeOffset().left, pos);
     }
 }
@@ -265,7 +265,7 @@ function drawSelection() {
     var left = selection.start * analysisCanvasScale;
     var right = selection.end * analysisCanvasScale;
     var ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, 10);
+    ctx.clearRect(0, 0, canvas.getWidth(), 10);
     ctx.strokeStyle = 'rgb(0, 174, 239)';
     ctx.fillStyle = 'rgba(0, 174, 239, 0.5)';
     ctx.fillRect(left, 0, right - left, 10);
