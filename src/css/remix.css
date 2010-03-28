@@ -238,8 +238,8 @@ label, .label {
     overflow: auto;
 }
 
-/* TODO more specific */
-#track_info canvas {
+.track_viz {
+    overflow: auto;
     cursor: text;
 }
 
