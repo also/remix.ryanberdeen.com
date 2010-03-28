@@ -145,7 +145,7 @@ function updateTrackInfo(track) {
     trackInfoElt.update();
     //trackInfoElt.update(track.displayTitle.escapeHTML());
     if (track.analysisLoaded) {
-        analysisCanvas = new Element('canvas', {width: trackInfoElt.getWidth() * 3, height: '100'});
+        analysisCanvas = new Element('canvas', {width: trackInfoElt.getWidth() * 3, height: '130'});
         analysisCanvas.observe('mousedown', onAnalysisMouseDown);
         analysisCanvas.observe('mousewheel', onAnalysisMouseWheel);
         track.selection = {track: track, start: 0, end: 0};
@@ -161,19 +161,41 @@ function drawAnalysis(track) {
     var canvas = analysisCanvas;
     canvas.width = analysisCanvasScale * track.analysis.duration;
     var ctx = canvas.getContext('2d');
+
+    ctx.save();
+    ctx.fillStyle = '#dddddd';
+    ctx.translate(0, 12);
+    drawEvents(ctx, track.analysis.bars);
+    ctx.translate(0, 6);
+    drawEvents(ctx, track.analysis.beats);
+    ctx.translate(0, 6);
+    drawEvents(ctx, track.analysis.tatums);
+
     var segs = track.analysis.segments;
-    var offsetTop = 10;
+    var offsetTop = 32;
     var height = (canvas.height - offsetTop) / 12;
+    ctx.translate(0, 8.5);
     ctx.clearRect(0, 10, canvas.width, canvas.height - 10);
     for (var i = 0; i < segs.length; i++) {
         var s = segs[i];
         for (var j = 0; j < 12; j++) {
             var p = s.pitches[j];
             ctx.fillStyle = 'rgba(' + pitchColors[j] + ', ' + p + ')';
-            ctx.fillRect(s.start * analysisCanvasScale, j * height + offsetTop, s.duration * analysisCanvasScale, height);
+            ctx.fillRect(s.start * analysisCanvasScale, j * height, s.duration * analysisCanvasScale, height);
         }
     }
+    ctx.restore();
     drawSelection();
+}
+
+function drawEvents(ctx, events) {
+    for (var i = 0; i < events.length; i++) {
+        ctx.beginPath();
+        var e = events[i];
+        ctx.arc(e.start * analysisCanvasScale, 2, 2, 0, Math.PI*2, true);
+        ctx.closePath();
+        ctx.fill();
+    }
 }
 
 function analysisPosition(e) {
