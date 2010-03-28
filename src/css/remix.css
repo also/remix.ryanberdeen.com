@@ -240,7 +240,24 @@ label, .label {
 
 .track_viz {
     overflow: auto;
+}
+
+.track_viz canvas {
     cursor: text;
+}
+
+.small_scrollbar::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+.small_scrollbar::-webkit-scrollbar:horizontal {
+    background: #eeeeee;
+}
+
+.small_scrollbar::-webkit-scrollbar-thumb:horizontal {
+    background: #aaaaaa;
+    -webkit-border-radius: 2px;
 }
 
 #error {

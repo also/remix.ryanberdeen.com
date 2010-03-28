@@ -5,7 +5,7 @@ var analysisCanvas;
 var analysisCanvasScale = 10;
     
 function createCanvas () {
-    wrapper = new Element('div', {'class': 'track_viz'});
+    wrapper = new Element('div', {'class': 'track_viz small_scrollbar'});
     analysisCanvas = new Element('canvas', {width: 1, height: '130'});
     analysisCanvas.observe('mousedown', onAnalysisMouseDown);
     analysisCanvas.observe('mousewheel', onAnalysisMouseWheel);
