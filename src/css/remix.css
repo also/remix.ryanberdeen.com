@@ -1,9 +1,9 @@
 body {
-    padding-bottom: 84px;
+    padding-bottom: 134px;
 }
 
 #credit {
-    bottom: 24px;
+    bottom: 74px;
 }
 
 #remix {
@@ -110,6 +110,16 @@ body {
     display: inline-block;
     width: 120px;
     font-size: 10px;
+}
+
+#timeline {
+    position: fixed;
+    bottom: 24px;
+    left: 0;
+    right: 0;
+    background-color: #ffffff;
+    overflow: auto;
+    z-index: 1;
 }
 
 #player {
