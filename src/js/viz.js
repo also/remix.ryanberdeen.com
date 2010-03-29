@@ -3,15 +3,33 @@ var Viz = (function () {
 var wrapper;
 var analysisCanvas;
 var analysisCanvasScale = 10;
-    
+
+var selection;
+
+var SOURCE = 'track_viz';
+
 function createCanvas () {
     wrapper = new Element('div', {'class': 'track_viz small_scrollbar'});
     analysisCanvas = new Element('canvas', {width: 1, height: '130'});
     analysisCanvas.observe('mousedown', onAnalysisMouseDown);
-    analysisCanvas.observe('mousewheel', onAnalysisMouseWheel);
+    zoomify({
+        canvas: analysisCanvas,
+        wrapper: wrapper,
+        scale: analysisCanvasScale,
+        setScale: setScale,
+        width: Editor.selectedTrack.analysis.duration,
+        zoomable: true
+    });
     wrapper.update(analysisCanvas);
-    drawAnalysis();
+    selection = Editor.selectedTrack.selection;
+    setScale(analysisCanvasScale);
     return wrapper;
+}
+
+function setScale(scale) {
+    analysisCanvasScale = scale;
+    analysisCanvas.width = scale * Editor.selectedTrack.analysis.duration;
+    drawAnalysis();
 }
 
 var pitchColors = ["47, 255, 0", "160, 255, 0", "255, 227, 0", "255, 90, 0", "255, 0, 0", "255, 0, 0", "167, 0, 0", "98, 0, 181", "67, 0, 242", "0, 0, 255", "0, 132, 255", "0, 255, 216"];
@@ -19,7 +37,7 @@ var pitchColors = ["47, 255, 0", "160, 255, 0", "255, 227, 0", "255, 90, 0", "25
 function drawAnalysis() {
     var track = Editor.selectedTrack;
     var canvas = analysisCanvas;
-    canvas.width = analysisCanvasScale * track.analysis.duration;
+
     var ctx = canvas.getContext('2d');
 
     ctx.save();
@@ -67,10 +85,17 @@ function positionAnalysis(offset, target) {
     wrapper.scrollLeft = scaledTarget - offset;
 }
 
+function center(position) {
+    positionAnalysis(wrapper.getWidth() / 2, position);
+}
+
 function onAnalysisMouseDown(e) {
     e.stop();
     var track = Editor.selectedTrack;
-    track.selection.start = analysisPosition(e);
+    selection = {
+        start: analysisPosition(e),
+        track: track
+    };
     $(document).observe('mouseup', onAnalysisMouseUp);
     $(document).observe('mousemove', onAnalysisMouseMove);
 }
@@ -78,7 +103,6 @@ function onAnalysisMouseDown(e) {
 function onAnalysisMouseUp(e) {
     e.stop();
     var track = Editor.selectedTrack;
-    var selection = track.selection;
     selection.end = analysisPosition(e);
     $(document).stopObserving('mouseup', onAnalysisMouseUp);
     $(document).stopObserving('mousemove', onAnalysisMouseMove);
@@ -87,40 +111,26 @@ function onAnalysisMouseUp(e) {
         selection.end = selection.start;
         selection.start = start;
     }
-    drawSelection();
-    Remix.remix([selection]);
+    App.selectTrackRange(selection, SOURCE);
 }
 
 function onAnalysisMouseMove(e) {
     e.stop();
     var track = Editor.selectedTrack;
-    var selection = track.selection;
     selection.end = analysisPosition(e);
     drawSelection();
 }
 
-var drawAnalysisTimeout = null;
-
-function onAnalysisMouseWheel(e) {
-    if (Math.abs(e.wheelDeltaY) > 0 && Math.abs(e.wheelDeltaX) < 10) {
-        e.stop();
-        if (drawAnalysisTimeout) {
-            clearTimeout(drawAnalysisTimeout);
-        }
-        var pos = analysisPosition(e);
-        var targetScale = analysisCanvasScale + e.wheelDeltaY / 200;
-        var newWidth = Math.floor(targetScale * Editor.selectedTrack.analysis.duration)
-        analysisCanvasScale = newWidth / Editor.selectedTrack.analysis.duration;
-        analysisCanvas.style.width = newWidth + 'px';
-        drawAnalysisTimeout = setTimeout(drawAnalysis, 300);
-        positionAnalysis(e.pointerX() - analysisCanvas.cumulativeOffset().left, pos);
+function selectTrackRange(source) {
+    selection = Editor.selectedTrack.selection;
+    drawSelection();
+    if (source != SOURCE) {
+        center(selection.start);
     }
 }
 
 function drawSelection() {
     var canvas = analysisCanvas;
-    var track = Editor.selectedTrack;
-    var selection = track.selection;
     var track = Editor.selectedTrack;
     var left = Math.round(selection.start * analysisCanvasScale) + 0.5;
     var right = Math.round(selection.end * analysisCanvasScale) + 0.5;
@@ -140,7 +150,46 @@ function drawSelection() {
     ctx.stroke();
 }
 
+function zoomify(options) {
+    var canvas = options.canvas;
+    var scale = options.scale;
+    var setScale = options.setScale;
+    var wrapper = options.wrapper;
+
+    var drawTimeout = null;
+    wrapper.observe('mousewheel', onMouseWheel);
+
+    canvas.width = scale * options.width;
+
+    function onMouseWheel(e) {
+        if (Math.abs(e.wheelDeltaY) > 0 && Math.abs(e.wheelDeltaX) < 10) {
+            e.stop();
+            if (drawTimeout) {
+                clearTimeout(drawTimeout);
+            }
+            if (!options.zoomable) {
+                return;
+            }
+            var pos = (e.pointerX() - canvas.cumulativeOffset().left + canvas.cumulativeScrollOffset().left) / scale;
+            var targetScale = scale + e.wheelDeltaY / 200;
+            var newWidth = Math.floor(targetScale * options.width);
+            scale = newWidth / options.width;
+            canvas.style.width = newWidth + 'px';
+            drawTimeout = setTimeout(redraw, 300);
+            wrapper.scrollLeft = Math.round(pos * scale) - (e.pointerX() - canvas.cumulativeOffset().left);
+        }
+    }
+
+    function redraw() {
+        setScale(scale);
+    }
+
+    return options;
+}
+
 return {
-    createCanvas: createCanvas
+    createCanvas: createCanvas,
+    selectTrackRange: selectTrackRange,
+    zoomify: zoomify
 }
 })();

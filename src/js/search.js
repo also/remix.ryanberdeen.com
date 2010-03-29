@@ -1,15 +1,26 @@
 (function () {
-Remix.onSearchResults = function (search) {
-    var ulElt = new Element('ul');
-    search.resultsElt.update(ulElt);
-    search.results.each(function (result) {
-        var liElt = new Element('li').update(result.title.escapeHTML() + ' by ' + result.artist.escapeHTML());
-        liElt.observe('click', function (e) {
-            App.load(result);
+
+extend(Remix, {
+    onSearchResults: function (search) {
+        var ulElt = new Element('ul');
+        search.resultsElt.update(ulElt);
+        search.results.each(function (result) {
+            var liElt = new Element('li').update(result.title.escapeHTML() + ' by ' + result.artist.escapeHTML());
+            liElt.observe('click', function (e) {
+                App.load(result);
+            });
+            ulElt.insert(liElt);
         });
-        ulElt.insert(liElt);
-    });
-};
+    },
+
+    onSearchNoResults: function (search) {
+        search.resultsElt.update('Sorry, no tracks matched your search.');
+    },
+
+    onSearchError: function (search) {
+        search.resultsElt.update('Sorry, an error occurred during your search.');
+    }
+})
 
 var advancedSearchElt = $('advanced_search_wrapper');
 

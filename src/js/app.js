@@ -1,13 +1,26 @@
 var App = (function () {
-// don't steal this, asshole
-Editor.init('TFWCGFDDK8ZSK1PUA');
 
-$('run_button').observe('click', function (e) {Editor.run();});
-var playButtonElt = $('play_button');
-playButtonElt.observe('click', function (e) {Remix.togglePlayPause();});
-var tracksElt = $('tracks');
+var progressElt;
+var sourceIndex;
+var tracksElt;
+var playButtonElt;
+var trackInfoElt;
 
-$('hide_error_button').observe('click', function (e) { e.stop(); $('error').hide(); });
+function init() {
+    // don't steal this, asshole
+    Editor.init('TFWCGFDDK8ZSK1PUA');
+
+    $('run_button').observe('click', function (e) {Editor.run();});
+    playButtonElt = $('play_button');
+    playButtonElt.observe('click', function (e) {Remix.togglePlayPause();});
+    tracksElt = $('tracks');
+
+    $('hide_error_button').observe('click', function (e) { e.stop(); $('error').hide(); });
+
+    progressElt = document.getElementById('progress');
+    trackInfoElt = $('track_info');
+    Timeline.init();
+}
 
 extend(Remix, {
     onError: function (error) {
@@ -20,7 +33,7 @@ extend(Remix, {
         var elt = new Element('li');
         elt.observe('click', function (e) {
             e.stop();
-            onTrackSelected(track);
+            selectTrack(track);
         });
 
         var titleElt = new Element('span', {'class': 'track_title'});
@@ -100,29 +113,19 @@ extend(Remix, {
         playButtonElt.addClassName('disabled');
     },
 
-    onSearchNoResults: function (search) {
-        search.resultsElt.update('Sorry, no tracks matched your search.');
-    },
-
-    onSearchError: function (search) {
-        search.resultsElt.update('Sorry, an error occurred during your search.');
+    onPlayerProgress: function(progress, newSourceIndex, sourcePosition) {
+        if (!Remix.playingSingleRange && newSourceIndex != sourceIndex) {
+            Remix.log(newSourceIndex);
+            sourceIndex = newSourceIndex;
+            Timeline.onPlayerProgress(progress, newSourceIndex, sourcePosition);
+        }
+        progressElt.style.width = 100 * progress + '%';
     },
 
     onRemix: function (aqs) {
-        Timeline.draw(aqs);
+        Timeline.setMix(aqs);
     }
 });
-
-function onTrackSelected(track) {
-    if (Editor.selectedTrack) {
-        Editor.selectedTrack.elt.removeClassName('selected');
-    }
-    Editor.selectedTrack = track;
-    track.elt.addClassName('selected');
-    updateTrackInfo(track);
-}
-
-var trackInfoElt = $('track_info');
 
 function updateTrack(track) {
     track.titleElt.update(track.displayTitle.escapeHTML());
@@ -135,11 +138,10 @@ function updateTrackInfo(track) {
     trackInfoElt.update();
     //trackInfoElt.update(track.displayTitle.escapeHTML());
     if (track.analysisLoaded) {
-        track.selection = {track: track, start: 0, end: 0};
+        track.selection = {start: 0, end: 0};
         trackInfoElt.insert(Viz.createCanvas());
     }
 }
-
 
 function playTrack(track) {
     if (!track.soundLoaded) {
@@ -152,6 +154,27 @@ function playTrack(track) {
         var aq = {start: 0, end: track.sound.length, track: track};
         Remix.remix([aq]);
     }
+}
+
+function selectTrack(track) {
+    if (Editor.selectedTrack != track) {
+        if (Editor.selectedTrack) {
+            Editor.selectedTrack.elt.removeClassName('selected');
+        }
+        Editor.selectedTrack = track;
+        track.elt.addClassName('selected');
+        updateTrackInfo(track);
+    }
+}
+
+function selectTrackRange(selection, source) {
+    var track = selection.track;
+    selectTrack(selection.track);
+    track.selection = selection;
+    if (track.analysisLoaded) {
+        Viz.selectTrackRange(source);
+    }
+    Remix.play(selection);
 }
 
 function load(result) {
@@ -184,5 +207,9 @@ Editor.getScript = function () {
     return script;
 }
 
-return {load: load};
+return {
+    init: init,
+    load: load,
+    selectTrackRange: selectTrackRange
+};
 })();
