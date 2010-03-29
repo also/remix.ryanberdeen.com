@@ -13,6 +13,7 @@
 <script type="text/javascript" src="remix.js"></script>
 <script type="text/javascript" src="editor.js"></script>
 <script type="text/javascript" src="viz.js"></script>
+<script type="text/javascript" src="timeline.js"></script>
 </head>
 <body>
 
@@ -106,8 +107,10 @@ play(samples);</textarea>
 </div>
 </div>
 
-<div id="timeline">
+<div id="timeline_wrapper">
+<div id="timeline" class="small_scrollbar">
 <canvas id="timeline_canvas" width="5000" height="50"></canvas>
+</div>
 </div>
 <div id="player">
 <div id="controls">
