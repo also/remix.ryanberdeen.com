@@ -39,10 +39,11 @@ function drawAnalysis() {
     var canvas = analysisCanvas;
 
     var ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 10, canvas.width, canvas.height - 10);
 
     ctx.save();
     ctx.fillStyle = '#dddddd';
-    ctx.translate(0, 12);
+    ctx.translate(0, 12.5);
     drawEvents(ctx, track.analysis.bars);
     ctx.translate(0, 6);
     drawEvents(ctx, track.analysis.beats);
@@ -51,16 +52,20 @@ function drawAnalysis() {
 
     var segs = track.analysis.segments;
     var offsetTop = 32;
-    var height = (canvas.height - offsetTop) / 12;
-    ctx.translate(0, 8.5);
-    ctx.clearRect(0, 10, canvas.width, canvas.height - 10);
+    var height = Math.floor((canvas.height - offsetTop) / 12);
+    ctx.translate(0, 8);
+    var left = 0;
     for (var i = 0; i < segs.length; i++) {
         var s = segs[i];
         for (var j = 0; j < 12; j++) {
             var p = s.pitches[j];
+            var right = Math.round(s.end * analysisCanvasScale);
+            var top = j * height + 0.5;
+            var width = right - left;
             ctx.fillStyle = 'rgba(' + pitchColors[j] + ', ' + p + ')';
-            ctx.fillRect(s.start * analysisCanvasScale, j * height, s.duration * analysisCanvasScale, height);
+            ctx.fillRect(left, top, width, height);
         }
+        left = right;
     }
     ctx.restore();
     drawSelection();
