@@ -123,7 +123,8 @@ body {
 }
 
 #timeline {
-    overflow: auto;
+    overflow-x: scroll;
+    overflow-y: visible;
     padding-bottom: 4px;
 }
 
@@ -249,16 +250,16 @@ label, .label {
     color: #fff;
 }
 
-#track_info {
-    overflow: auto;
-}
-
 .track_viz {
-    overflow: auto;
+    overflow-x: scroll;
+    overflow-y: visible;
+    padding-bottom: 4px;
+    background: #eeeeee;
 }
 
 .track_viz canvas {
     cursor: text;
+    background: #ffffff;
 }
 
 .small_scrollbar::-webkit-scrollbar {
