@@ -6,14 +6,16 @@ var tracksElt;
 var playButtonElt;
 var trackInfoElt;
 
-var snips;
+var _snips;
 var remixJsElt;
+
+var userCallbacks = {};
 
 function init() {
     // don't steal this, asshole
     Remix.init('TFWCGFDDK8ZSK1PUA');
 
-    snips = {};
+    _snips = {};
 
     remixJsElt = document.getElementById('remixJs');
 
@@ -163,6 +165,7 @@ function run() {
         Remix.remix.apply(Remix, arguments);
         remixCalled = true;
     };
+    var preview = Remix.play.bind(Remix);
     // TODO use copies
     var tracks = Remix._tracks;
     var track = App.selectedTrack || tracks[0];
@@ -172,7 +175,8 @@ function run() {
     }
     var selection = track.selection;
     var analysis = track.analysis;
-    var snips = this._snips;
+    var snips = _snips;
+    var callbacks = userCallbacks;
     try {
         eval(script);
         if (!remixCalled) {
@@ -231,7 +235,17 @@ function selectTrackRange(selection, source) {
     if (track.analysisLoaded) {
         Viz.selectTrackRange(source);
     }
-    Remix.play(selection);
+    if (userCallbacks.onSelect) {
+        try {
+            userCallbacks.onSelect(selection);
+        }
+        catch (e) {
+            Remix.onError(e);
+        }
+    }
+    else {
+        Remix.preview(selection);
+    }
 }
 
 function load(result) {
