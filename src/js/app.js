@@ -28,7 +28,7 @@ function init() {
 
     progressElt = document.getElementById('progress');
     trackInfoElt = $('track_info');
-    Timeline.init();
+    App.timeline = new Timeline();
 }
 
 extend(Remix, {
@@ -126,13 +126,13 @@ extend(Remix, {
         if (!Remix.playingSingleRange && newSourceIndex != sourceIndex) {
             Remix.log(newSourceIndex);
             sourceIndex = newSourceIndex;
-            Timeline.onPlayerProgress(progress, newSourceIndex, sourcePosition);
+        App.timeline.onPlayerProgress(progress, newSourceIndex, sourcePosition);
         }
         progressElt.style.width = 100 * progress + '%';
     },
 
     onRemix: function (aqs) {
-        Timeline.setMix(aqs);
+        App.timeline.setMix(aqs);
     }
 });
 
@@ -244,7 +244,7 @@ function selectTrackRange(selection, source) {
         }
     }
     else {
-        Remix.preview(selection);
+        Remix.play(selection);
     }
 }
 
