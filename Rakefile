@@ -1,7 +1,7 @@
 STATIC_HTML = FileList.new('src/html/*.html')
 STATIC_JS = FileList.new('src/js/*.js')
 STATIC_CSS = FileList.new('src/css/*.css')
-LIB_JS = FileList.new(['lib/remixjs/dist/remix.js', 'lib/remixjs/src/editor/editor.js', 'lib/remixjs/lib/swfobject/swfobject.js', 'lib/sylvester/sylvester.js', 'lib/jslint/fulljslint.js', 'lib/prototype/prototype.js'])
+LIB_JS = FileList.new(['lib/remixjs/dist/remix.js', 'lib/remixjs/lib/swfobject/swfobject.js', 'lib/sylvester/sylvester.js', 'lib/jslint/fulljslint.js', 'lib/prototype/prototype.js'])
 LIB_SWF = 'lib/remixjs/dist/remix.swf'
 
 ALL = STATIC_HTML + STATIC_JS + STATIC_CSS + LIB_JS + LIB_JS + [LIB_SWF]

@@ -6,8 +6,6 @@ var analysisCanvasScale = 10;
 
 var selection;
 
-var SOURCE = 'track_viz';
-
 function createCanvas () {
     wrapper = new Element('div', {'class': 'track_viz small_scrollbar'});
     analysisCanvas = new Element('canvas', {width: 1, height: '130'});
@@ -17,25 +15,25 @@ function createCanvas () {
         wrapper: wrapper,
         scale: analysisCanvasScale,
         setScale: setScale,
-        width: Editor.selectedTrack.analysis.duration,
+        width: App.selectedTrack.analysis.duration,
         zoomable: true
     });
     wrapper.update(analysisCanvas);
-    selection = Editor.selectedTrack.selection;
+    selection = App.selectedTrack.selection;
     setScale(analysisCanvasScale);
     return wrapper;
 }
 
 function setScale(scale) {
     analysisCanvasScale = scale;
-    analysisCanvas.width = scale * Editor.selectedTrack.analysis.duration;
+    analysisCanvas.width = scale * App.selectedTrack.analysis.duration;
     drawAnalysis();
 }
 
 var pitchColors = ["47, 255, 0", "160, 255, 0", "255, 227, 0", "255, 90, 0", "255, 0, 0", "255, 0, 0", "167, 0, 0", "98, 0, 181", "67, 0, 242", "0, 0, 255", "0, 132, 255", "0, 255, 216"];
 
 function drawAnalysis() {
-    var track = Editor.selectedTrack;
+    var track = App.selectedTrack;
     var canvas = analysisCanvas;
 
     var ctx = canvas.getContext('2d');
@@ -96,7 +94,7 @@ function center(position) {
 
 function onAnalysisMouseDown(e) {
     e.stop();
-    var track = Editor.selectedTrack;
+    var track = App.selectedTrack;
     selection = {
         start: analysisPosition(e),
         track: track
@@ -107,7 +105,7 @@ function onAnalysisMouseDown(e) {
 
 function onAnalysisMouseUp(e) {
     e.stop();
-    var track = Editor.selectedTrack;
+    var track = App.selectedTrack;
     selection.end = analysisPosition(e);
     $(document).stopObserving('mouseup', onAnalysisMouseUp);
     $(document).stopObserving('mousemove', onAnalysisMouseMove);
@@ -116,27 +114,27 @@ function onAnalysisMouseUp(e) {
         selection.end = selection.start;
         selection.start = start;
     }
-    App.selectTrackRange(selection, SOURCE);
+    App.selectTrackRange(selection, Viz);
 }
 
 function onAnalysisMouseMove(e) {
     e.stop();
-    var track = Editor.selectedTrack;
+    var track = App.selectedTrack;
     selection.end = analysisPosition(e);
     drawSelection();
 }
 
 function selectTrackRange(source) {
-    selection = Editor.selectedTrack.selection;
+    selection = App.selectedTrack.selection;
     drawSelection();
-    if (source != SOURCE) {
+    if (source != Viz) {
         center(selection.start);
     }
 }
 
 function drawSelection() {
     var canvas = analysisCanvas;
-    var track = Editor.selectedTrack;
+    var track = App.selectedTrack;
     var left = Math.round(selection.start * analysisCanvasScale) + 0.5;
     var right = Math.round(selection.end * analysisCanvasScale) + 0.5;
     var ctx = canvas.getContext('2d');

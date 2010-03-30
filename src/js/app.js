@@ -6,11 +6,18 @@ var tracksElt;
 var playButtonElt;
 var trackInfoElt;
 
+var snips;
+var remixJsElt;
+
 function init() {
     // don't steal this, asshole
-    Editor.init('TFWCGFDDK8ZSK1PUA');
+    Remix.init('TFWCGFDDK8ZSK1PUA');
 
-    $('run_button').observe('click', function (e) {Editor.run();});
+    snips = {};
+
+    remixJsElt = document.getElementById('remixJs');
+
+    $('run_button').observe('click', function (e) {run();});
     playButtonElt = $('play_button');
     playButtonElt.observe('click', function (e) {Remix.togglePlayPause();});
     tracksElt = $('tracks');
@@ -127,9 +134,59 @@ extend(Remix, {
     }
 });
 
+function getScript() {
+    var script = remixJsElt.value;
+    if (!JSLINT(script, JSLINT_OPTIONS)) {
+        var lint = JSLINT.errors;
+        var errorMessage = '';
+        for (var i = 0; i < lint.length; i++) {
+            var error = lint[i];
+            if (error && error.raw && error.raw != 'Missing semicolon.') {
+                errorMessage += '<p><strong>At line ' + error.line + ', character ' + error.character + ': ' + error.reason.escapeHTML() + '</strong>' + '<br/><code>' + error.evidence.escapeHTML() + '</code></p>';
+            }
+        }
+        if (errorMessage.length > 0) {
+            Remix.onError(errorMessage);
+            return null;
+        }
+    }
+    return script;
+}
+
+function run() {
+    var script = getScript();
+    if (!script) {
+        return;
+    }
+    var remixCalled = false;
+    var play = function () {
+        Remix.remix.apply(Remix, arguments);
+        remixCalled = true;
+    };
+    // TODO use copies
+    var tracks = Remix._tracks;
+    var track = App.selectedTrack || tracks[0];
+    if (!track) {
+        Remix.onError('No tracks available.');
+        return;
+    }
+    var selection = track.selection;
+    var analysis = track.analysis;
+    var snips = this._snips;
+    try {
+        eval(script);
+        if (!remixCalled) {
+            Remix.onError('Call the play() function to play your remix');
+        }
+    }
+    catch(e) {
+        Remix.onError(e);
+    }
+}
+
 function updateTrack(track) {
     track.titleElt.update(track.displayTitle.escapeHTML());
-    if (track == Editor.selectedTrack) {
+    if (track == App.selectedTrack) {
         updateTrackInfo(track);
     }
 }
@@ -157,11 +214,11 @@ function playTrack(track) {
 }
 
 function selectTrack(track) {
-    if (Editor.selectedTrack != track) {
-        if (Editor.selectedTrack) {
-            Editor.selectedTrack.elt.removeClassName('selected');
+    if (App.selectedTrack != track) {
+        if (App.selectedTrack) {
+            App.selectedTrack.elt.removeClassName('selected');
         }
-        Editor.selectedTrack = track;
+        App.selectedTrack = track;
         track.elt.addClassName('selected');
         updateTrackInfo(track);
     }
@@ -185,27 +242,6 @@ function load(result) {
 }
 
 var JSLINT_OPTIONS = {debug: true, evil: true, laxbreak: true, forin: true, sub: true, css: true, cap: true, on: true, fragment: true};
-
-Editor.getRawScript = Editor.getScript;
-
-Editor.getScript = function () {
-    var script = Editor.getRawScript();
-    if (!JSLINT(script, JSLINT_OPTIONS)) {
-        var lint = JSLINT.errors;
-        var errorMessage = '';
-        for (var i = 0; i < lint.length; i++) {
-            var error = lint[i];
-            if (error && error.raw && error.raw != 'Missing semicolon.') {
-                errorMessage += '<p><strong>At line ' + error.line + ', character ' + error.character + ': ' + error.reason.escapeHTML() + '</strong>' + '<br/><code>' + error.evidence.escapeHTML() + '</code></p>';
-            }
-        }
-        if (errorMessage.length > 0) {
-            Remix.onError(errorMessage);
-            return null;
-        }
-    }
-    return script;
-}
 
 return {
     init: init,
