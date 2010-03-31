@@ -165,6 +165,9 @@ function zoomify(options) {
     canvas.width = scale * options.width;
 
     function onMouseWheel(e) {
+        // TODO if the scrolling element is in another scrolling element, when
+        // the user scrolls to the edge it is easy to get unexpected vertical
+        // scrolling, because the element no longer captures the scrolling
         if (Math.abs(e.wheelDeltaY) > 0 && Math.abs(e.wheelDeltaX) < 10) {
             e.stop();
             if (drawTimeout) {

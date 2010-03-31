@@ -123,10 +123,17 @@ body {
 }
 
 .timeline_track {
+    position: relative;
     overflow-x: scroll;
     overflow-y: visible;
     padding-bottom: 4px;
     margin-bottom: 4px;
+}
+
+.timeline_track .marker {
+    height: 100%;
+    position: absolute;
+    border-right: 1px solid red;
 }
 
 .timeline_track:last-child {

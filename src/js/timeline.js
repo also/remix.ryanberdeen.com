@@ -1,14 +1,17 @@
 var Timeline = function () {
     var aqs;
+    var selectedIndex;
     var selectedAq;
     var duration;
 
     var scale = 10;
 
     var scrollElt = new Element('div', {'class': 'timeline_track small_scrollbar'});
+    var markerElt = new Element('div', {'class': 'marker'});
+    scrollElt.update(markerElt);
     var canvas = new Element('canvas', {'height': 30});
     canvas.observe('click', onClick);
-    scrollElt.update(canvas);
+    scrollElt.insert(canvas);
 
     var ctx = canvas.getContext('2d');
     var top = 0.5;
@@ -98,10 +101,16 @@ var Timeline = function () {
 
     this.onPlayerProgress = function (progress, index, sourcePosition) {
         select(index);
-        center(selectedAq.offset);
+        position = progress * duration;
+        center(position);
+        positionMarker(position);
     };
 
     function select(index) {
+        if (index == selectedIndex) {
+            return;
+        }
+        selectedIndex = index;
         if (selectedAq) {
             applyDefaultStyle();
             drawAq(selectedAq);
@@ -117,6 +126,10 @@ var Timeline = function () {
 
     function center(position) {
         scrollElt.scrollLeft = position * scale - scrollElt.getWidth() / 2;
+    }
+
+    function positionMarker(position) {
+        markerElt.style.left = position * scale + 'px';
     }
 
     function onClick(e) {

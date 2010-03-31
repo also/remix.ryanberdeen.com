@@ -127,8 +127,8 @@ extend(Remix, {
         if (!Remix.playingSingleRange && newSourceIndex != sourceIndex) {
             Remix.log(newSourceIndex);
             sourceIndex = newSourceIndex;
-        App.timeline.onPlayerProgress(progress, newSourceIndex, sourcePosition);
         }
+        App.timeline.onPlayerProgress(progress, newSourceIndex, sourcePosition);
         progressElt.style.width = 100 * progress + '%';
     },
 
@@ -251,7 +251,7 @@ function selectTrackRange(selection, source) {
 
 function addTimeline(aqs) {
     var timeline = new Timeline();
-    $('timeline_wrapper').insert(timeline);
+    $('track_info').insert({before: timeline});
     timeline.setMix(Remix.processAqs(aqs));
 }
 
