@@ -5,10 +5,11 @@ var Timeline = function () {
 
     var scale = 10;
 
-    var canvas = $('timeline_canvas');
+    var scrollElt = new Element('div', {'class': 'timeline_track small_scrollbar'});
+    var canvas = new Element('canvas', {'height': 30});
     canvas.observe('click', onClick);
+    scrollElt.update(canvas);
 
-    var wrapper = canvas.up();
     var ctx = canvas.getContext('2d');
     var top = 0.5;
     var bottom = bottom = canvas.height - 0.5;
@@ -16,13 +17,17 @@ var Timeline = function () {
 
     var zoomOptions = Viz.zoomify({
         canvas: canvas,
-        wrapper: wrapper,
+        wrapper: scrollElt,
         scale: scale,
         setScale: setScale,
         zoomable: false,
         //FIXME
         width: 100
     });
+
+    this.toElement = function() {
+        return scrollElt;
+    };
 
     this.setMix = function (mix) {
         aqs = mix;
@@ -111,7 +116,7 @@ var Timeline = function () {
     }
 
     function center(position) {
-        wrapper.scrollLeft = position * scale - wrapper.getWidth() / 2;
+        scrollElt.scrollLeft = position * scale - scrollElt.getWidth() / 2;
     }
 
     function onClick(e) {

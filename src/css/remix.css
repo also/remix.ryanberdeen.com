@@ -122,10 +122,15 @@ body {
     padding: 4px 4px 0 4px;
 }
 
-#timeline {
+.timeline_track {
     overflow-x: scroll;
     overflow-y: visible;
     padding-bottom: 4px;
+    margin-bottom: 4px;
+}
+
+.timeline_track:last-child {
+    margin-bottom: 0;
 }
 
 #player {

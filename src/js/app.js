@@ -29,6 +29,7 @@ function init() {
     progressElt = document.getElementById('progress');
     trackInfoElt = $('track_info');
     App.timeline = new Timeline();
+    $('timeline_wrapper').update(App.timeline);
 }
 
 extend(Remix, {
@@ -246,6 +247,12 @@ function selectTrackRange(selection, source) {
     else {
         Remix.play(selection);
     }
+}
+
+function addTimeline(aqs) {
+    var timeline = new Timeline();
+    $('timeline_wrapper').insert(timeline);
+    timeline.setMix(Remix.processAqs(aqs));
 }
 
 function load(result) {
