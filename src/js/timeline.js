@@ -6,7 +6,23 @@ var Timeline = function () {
 
     var scale = 10;
 
+    var wrapperElt = new Element('div', {'class': 'timeline_wrapper'});
+    var headerElt = new Element('div', {'class': 'timeline_header'});
+    var typeElt = new Element('select');
+    typeElt.observe('change', onTypeChange);
+    Timeline.TYPES.each(function(t) {
+        typeElt.insert(new Element('option', {'value': t[0]}).update(t[1]));
+    });
+    var type = typeElt.value;
+    headerElt.insert(typeElt);
+    var closeElt = new Element('span', {'class': 'close_button'});
+    closeElt.observe('click', function (e) {
+        wrapperElt.remove();
+    });
+    headerElt.insert(closeElt);
+    wrapperElt.insert(headerElt);
     var scrollElt = new Element('div', {'class': 'timeline_track small_scrollbar'});
+    wrapperElt.insert(scrollElt);
     var markerElt = new Element('div', {'class': 'marker', 'style': 'height: 40px'});
     scrollElt.update(markerElt);
     var canvas = new Element('canvas', {'height': 40});
@@ -31,7 +47,7 @@ var Timeline = function () {
     });
 
     this.toElement = function() {
-        return scrollElt;
+        return wrapperElt;
     };
 
     this.setMix = function (mix) {
@@ -49,6 +65,12 @@ var Timeline = function () {
 
         setScale(scale);
     };
+
+    function onTypeChange(e) {
+        e.stop();
+        type = typeElt.value;
+        draw();
+    }
 
     function setScale(newScale) {
         scale = newScale;
@@ -91,7 +113,7 @@ var Timeline = function () {
         var right = Math.floor(pos + width - 1) + .5;
 
         var fill = true;
-        if (aq.source && aq.source.pitches) {
+        if (type == 'pitches' && aq.source && aq.source.pitches) {
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(left, top, right - left, bottom - top);
             ctx.save();
@@ -166,3 +188,7 @@ var Timeline = function () {
         return (e.pointerX() - canvas.cumulativeOffset().left + canvas.cumulativeScrollOffset().left) / scale;
     }
 }
+
+Timeline.TYPES = [
+    ['plain', 'Plain'],
+    ['pitches', 'Pitches']];

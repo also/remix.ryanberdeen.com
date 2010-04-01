@@ -29,7 +29,7 @@ function init() {
     progressElt = document.getElementById('progress');
     trackInfoElt = $('track_info');
     App.timeline = new Timeline();
-    $('timeline_wrapper').update(App.timeline);
+    $('main_timeline').update(App.timeline);
 }
 
 extend(Remix, {
@@ -58,7 +58,7 @@ extend(Remix, {
         removeElt.observe('click', function (e) {
             Remix.removeTrack(track);
             track.elt.remove();
-        })
+        });
         elt.insert(removeElt);
 
         var analysisStatusWrapperElt = new Element('span', {'class': 'track_analysis_status'});

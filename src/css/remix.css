@@ -112,14 +112,18 @@ body {
     font-size: 10px;
 }
 
-#timeline_wrapper {
+#main_timeline {
     position: fixed;
     bottom: 24px;
     left: 0;
     right: 0;
-    background-color: #eeeeee;
     z-index: 1;
     padding: 4px 4px 0 4px;
+}
+
+.timeline_wrapper {
+    background-color: #eeeeee;
+    position: relative;
 }
 
 .timeline_track {
