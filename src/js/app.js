@@ -182,9 +182,6 @@ function run() {
     var callbacks = userCallbacks;
     try {
         eval(script);
-        if (!remixCalled) {
-            Remix.onError('Call the play() function to play your remix');
-        }
     }
     catch(e) {
         Remix.onError(e);
