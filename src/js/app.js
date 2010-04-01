@@ -162,9 +162,7 @@ function run() {
     var remixCalled = false;
     var play = function () {
         App.timeline.setTitle('Untitled Edit');
-        var aqs = Remix.processAqs.apply(Remix, arguments);
-        App.timeline.setMix(aqs);
-        App.playTimeline(App.timeline);
+        playInMainTimeline.apply(App, arguments);
 
         remixCalled = true;
     };
