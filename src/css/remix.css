@@ -112,6 +112,11 @@ body {
     font-size: 10px;
 }
 
+#track_info {
+    padding-top: 4px;
+    background-color: #eeeeee;
+}
+
 #main_timeline {
     position: fixed;
     bottom: 24px;
@@ -124,6 +129,24 @@ body {
 .timeline_wrapper {
     background-color: #eeeeee;
     position: relative;
+}
+
+.timeline_header {
+    font-size: 12px;
+    padding: 4px;
+}
+
+.timeline_header .play_button {
+    width: 10px;
+    height: 10px;
+    padding: 3px;
+    margin-right: 4px;
+    vertical-align: middle;
+}
+
+.timeline_title {
+    padding-right: .5em;
+    font-weight: bold;
 }
 
 .timeline_track {

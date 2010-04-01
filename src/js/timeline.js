@@ -1,4 +1,5 @@
 var Timeline = function () {
+    var _this = this;
     var aqs;
     var selectedIndex;
     var selectedAq;
@@ -8,6 +9,11 @@ var Timeline = function () {
 
     var wrapperElt = new Element('div', {'class': 'timeline_wrapper'});
     var headerElt = new Element('div', {'class': 'timeline_header'});
+    var playButtonElt = new Element('span', {'class': 'play_button button'});
+    playButtonElt.observe('click', onPlayClick);
+    headerElt.insert(playButtonElt);
+    var titleElt = new Element('span', {'class': 'timeline_title'});
+    headerElt.insert(titleElt);
     var typeElt = new Element('select');
     typeElt.observe('change', onTypeChange);
     Timeline.TYPES.each(function(t) {
@@ -16,9 +22,7 @@ var Timeline = function () {
     var type = typeElt.value;
     headerElt.insert(typeElt);
     var closeElt = new Element('span', {'class': 'close_button'});
-    closeElt.observe('click', function (e) {
-        wrapperElt.remove();
-    });
+    closeElt.observe('click', onCloseClick);
     headerElt.insert(closeElt);
     wrapperElt.insert(headerElt);
     var scrollElt = new Element('div', {'class': 'timeline_track small_scrollbar'});
@@ -66,10 +70,28 @@ var Timeline = function () {
         setScale(scale);
     };
 
+    this.setTitle = function (title) {
+        titleElt.update(title.escapeHTML());
+    }
+
     function onTypeChange(e) {
         e.stop();
         type = typeElt.value;
         draw();
+    }
+
+    function onCloseClick(e) {
+        e.stop();
+        App.closeTimeline(_this);
+    }
+
+    this.close = function () {
+        wrapperElt.remove();
+    }
+
+    function onPlayClick(e) {
+        e.stop();
+        App.playTimeline(_this);
     }
 
     function setScale(newScale) {
@@ -186,6 +208,10 @@ var Timeline = function () {
 
     function position(e) {
         return (e.pointerX() - canvas.cumulativeOffset().left + canvas.cumulativeScrollOffset().left) / scale;
+    }
+
+    this.getAqs = function () {
+        return aqs;
     }
 }
 

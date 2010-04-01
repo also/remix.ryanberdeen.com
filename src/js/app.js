@@ -129,13 +129,9 @@ extend(Remix, {
                 Remix.log(newSourceIndex);
                 sourceIndex = newSourceIndex;
             }
-            App.timeline.onPlayerProgress(progress, newSourceIndex, sourcePosition);
+            App.playingTimeline.onPlayerProgress(progress, newSourceIndex, sourcePosition);
         }
         progressElt.style.width = 100 * progress + '%';
-    },
-
-    onRemix: function (aqs) {
-        App.timeline.setMix(aqs);
     }
 });
 
@@ -165,7 +161,11 @@ function run() {
     }
     var remixCalled = false;
     var play = function () {
-        Remix.remix.apply(Remix, arguments);
+        App.timeline.setTitle('Untitled Edit');
+        var aqs = Remix.processAqs.apply(Remix, arguments);
+        App.timeline.setMix(aqs);
+        App.playTimeline(App.timeline);
+
         remixCalled = true;
     };
     var preview = Remix.play.bind(Remix);
@@ -212,12 +212,25 @@ function playTrack(track) {
         return;
     }
     if (track.analysisLoaded) {
-        Remix.remix(track.analysis.segments);
+        playInMainTimeline(track.analysis.segments);
     }
     else {
         var aq = {start: 0, end: track.sound.length, track: track};
-        Remix.remix([aq]);
+        playInMainTimeline([aq]);
     }
+    App.timeline.setTitle(track.displayTitle);
+}
+
+function playInMainTimeline(aqs) {
+    App.timeline.setMix(Remix.processAqs(aqs));
+    App.playTimeline(App.timeline);
+}
+
+function closeTimeline(timeline) {
+    if (timeline == App.playTimeline && !Remix.playingSingleRange) {
+        // TODO stop playback
+    }
+    timeline.close();
 }
 
 function selectTrack(track) {
@@ -253,8 +266,14 @@ function selectTrackRange(selection, source) {
 
 function addTimeline(aqs) {
     var timeline = new Timeline();
+    timeline.setTitle('Untitled Edit');
     $('track_info').insert({before: timeline});
     timeline.setMix(Remix.processAqs(aqs));
+}
+
+function playTimeline(timeline) {
+    App.playingTimeline = timeline;
+    Remix.remix(timeline.getAqs());
 }
 
 function load(result) {
@@ -269,6 +288,8 @@ var JSLINT_OPTIONS = {debug: true, evil: true, laxbreak: true, forin: true, sub:
 return {
     init: init,
     load: load,
-    selectTrackRange: selectTrackRange
+    selectTrackRange: selectTrackRange,
+    playTimeline: playTimeline,
+    closeTimeline: closeTimeline
 };
 })();
