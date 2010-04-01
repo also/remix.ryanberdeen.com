@@ -51,22 +51,27 @@ function drawAnalysis() {
     var segs = track.analysis.segments;
     var offsetTop = 32;
     var height = Math.floor((canvas.height - offsetTop) / 12);
-    ctx.translate(0, 8);
+    ctx.translate(0, 8.5);
     var left = 0;
     for (var i = 0; i < segs.length; i++) {
         var s = segs[i];
-        for (var j = 0; j < 12; j++) {
-            var p = s.pitches[j];
-            var right = Math.round(s.end * analysisCanvasScale);
-            var top = j * height + 0.5;
-            var width = right - left;
-            ctx.fillStyle = 'rgba(' + pitchColors[j] + ', ' + p + ')';
-            ctx.fillRect(left, top, width, height);
-        }
+        var right = Math.round(s.end * analysisCanvasScale);
+        var width = right - left;
+        drawSegment(ctx, s, width, height);
+        ctx.translate(width, 0);
         left = right;
     }
     ctx.restore();
     drawSelection();
+}
+
+function drawSegment(ctx, s, width, height) {
+    for (var j = 0; j < 12; j++) {
+        var p = s.pitches[j];
+        var top = j * height;
+        ctx.fillStyle = 'rgba(' + pitchColors[j] + ', ' + p + ')';
+        ctx.fillRect(0, top, width, height);
+    }
 }
 
 function drawEvents(ctx, events) {
@@ -196,6 +201,7 @@ function zoomify(options) {
 return {
     createCanvas: createCanvas,
     selectTrackRange: selectTrackRange,
+    drawSegment: drawSegment,
     zoomify: zoomify
 }
 })();

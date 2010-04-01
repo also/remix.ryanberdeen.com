@@ -131,7 +131,6 @@ body {
 }
 
 .timeline_track .marker {
-    height: 100%;
     position: absolute;
     border-right: 1px solid red;
 }

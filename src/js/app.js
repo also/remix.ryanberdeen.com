@@ -124,11 +124,13 @@ extend(Remix, {
     },
 
     onPlayerProgress: function(progress, newSourceIndex, sourcePosition) {
-        if (!Remix.playingSingleRange && newSourceIndex != sourceIndex) {
-            Remix.log(newSourceIndex);
-            sourceIndex = newSourceIndex;
+        if (!Remix.playingSingleRange) {
+            if (newSourceIndex != sourceIndex) {
+                Remix.log(newSourceIndex);
+                sourceIndex = newSourceIndex;
+            }
+            App.timeline.onPlayerProgress(progress, newSourceIndex, sourcePosition);
         }
-        App.timeline.onPlayerProgress(progress, newSourceIndex, sourcePosition);
         progressElt.style.width = 100 * progress + '%';
     },
 

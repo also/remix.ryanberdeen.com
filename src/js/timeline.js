@@ -7,9 +7,9 @@ var Timeline = function () {
     var scale = 10;
 
     var scrollElt = new Element('div', {'class': 'timeline_track small_scrollbar'});
-    var markerElt = new Element('div', {'class': 'marker'});
+    var markerElt = new Element('div', {'class': 'marker', 'style': 'height: 40px'});
     scrollElt.update(markerElt);
-    var canvas = new Element('canvas', {'height': 30});
+    var canvas = new Element('canvas', {'height': 40});
     canvas.observe('click', onClick);
     scrollElt.insert(canvas);
 
@@ -17,6 +17,8 @@ var Timeline = function () {
     var top = 0.5;
     var bottom = bottom = canvas.height - 0.5;
     var cornerSize = 0;
+
+    var pitchHeight = (bottom - top) / 12;
 
     var zoomOptions = Viz.zoomify({
         canvas: canvas,
@@ -88,6 +90,17 @@ var Timeline = function () {
         var left = Math.floor(pos + 1) + .5;
         var right = Math.floor(pos + width - 1) + .5;
 
+        var fill = true;
+        if (aq.source && aq.source.pitches) {
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(left, top, right - left, bottom - top);
+            ctx.save();
+            ctx.translate(left, top);
+            Viz.drawSegment(ctx, aq.source, right - left, pitchHeight);
+            ctx.restore();
+            fill = false;
+        }
+
         ctx.beginPath();
         ctx.moveTo(left, top);
         ctx.lineTo(right - cornerWidth, top);
@@ -95,13 +108,15 @@ var Timeline = function () {
         ctx.lineTo(right, bottom);
         ctx.lineTo(left, bottom);
         ctx.lineTo(left, top);
-        ctx.fill();
+        if (fill) {
+            ctx.fill();
+        }
         ctx.stroke();
     }
 
     this.onPlayerProgress = function (progress, index, sourcePosition) {
         select(index);
-        position = progress * duration;
+        var position = progress * duration;
         center(position);
         positionMarker(position);
     };
