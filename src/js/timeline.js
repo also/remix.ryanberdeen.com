@@ -36,7 +36,7 @@ var Timeline = function () {
     var ctx = canvas.getContext('2d');
     var top = 0.5;
     var bottom = bottom = canvas.height - 0.5;
-    var cornerSize = 0;
+    var cornerSize = 2;
 
     var pitchHeight = (bottom - top) / 12;
 
@@ -131,8 +131,8 @@ var Timeline = function () {
         var width = (aq.duration) * scale;
         var cornerWidth = Math.min(cornerSize, width - 4);
         var pos = aq.offset * scale;
-        var left = Math.floor(pos + 1) + .5;
-        var right = Math.floor(pos + width - 1) + .5;
+        var left = Math.floor(pos) + .5;
+        var right = Math.floor(pos + width) + .5;
 
         var fill = true;
         if (type == 'pitches' && aq.source && aq.source.pitches) {
