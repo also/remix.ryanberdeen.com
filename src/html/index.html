@@ -35,6 +35,8 @@
 <span id="show_search_button">Advanced Search</span>
 </form>
 
+<span class="button" id="show_visualizer_button">V</span>
+
 <div id="advanced_search_wrapper" style="display: none">
 <h2>Advanced Search</h2>
 <span id="hide_search_button" class="close_button"></span>
@@ -107,13 +109,16 @@ play(samples);</textarea>
 </div>
 </div>
 
+</div>
+
+<canvas id="visualizer" width="640" height="480" style="display: none"></canvas>
+<script type="text/javascript" src="tunnel.js"></script>
+
 <div id="main_timeline"></div>
 <div id="player">
-<div id="controls">
-<span id="play_button" class="play_button button disabled"></span></div>
+<div id="controls"><span id="play_button" class="play_button button disabled"></span></div>
 
 <div id="progress_wrapper"><div id="progress" style="width: 0%;"></div></div>
-</div>
 </div>
 
 <div id="credit"><a href="http://echonest.com"><img src="http://the.echonest.com/media/images/logos/140x50_lt.gif" alt="Powered By The Echo Nest"></a>

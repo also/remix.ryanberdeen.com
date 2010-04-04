@@ -26,6 +26,9 @@ function init() {
 
     $('hide_error_button').observe('click', function (e) { e.stop(); $('error').hide(); });
 
+    $('show_visualizer_button').observe('click', function (e) { e.stop(); showVisualizer(); });
+    $('visualizer').observe('click', function (e) { e.stop(); hideVisualizer(); });
+
     progressElt = document.getElementById('progress');
     trackInfoElt = $('track_info');
     App.timeline = new Timeline();
@@ -131,8 +134,17 @@ extend(Remix, {
             if (newSourceIndex != sourceIndex) {
                 Remix.log(newSourceIndex);
                 sourceIndex = newSourceIndex;
+                if (App.activeVisualizer) {
+                    var aq = Remix.playingAqs[sourceIndex];
+                    // TODO this checks if the aq is from a segment. there should be a better way
+                    if (aq.source.pitches) {
+                        App.activeVisualizer.setSegment(aq.source);
+                    }
+                }
             }
-            App.playingTimeline.onPlayerProgress(progress, newSourceIndex, sourcePosition);
+            if (!App.activeVisualizer) {
+                App.playingTimeline.onPlayerProgress(progress, newSourceIndex, sourcePosition);
+            }
         }
         progressElt.style.width = 100 * progress + '%';
     }
@@ -281,6 +293,30 @@ function closeTimeline(timeline) {
     timeline.close();
 }
 
+function showVisualizer() {
+    var playerElt = $('controls');
+    var dim = document.viewport.getDimensions();
+    var width = playerElt.getWidth();
+    var height = playerElt.cumulativeOffset().top;
+    var visualizerElt = $('visualizer');
+    visualizerElt.width = width;
+    visualizerElt.height = height;
+    visualizerElt.show();
+    $('right').hide();
+    $('main_timeline').hide();
+    App.activeVisualizer = Tunnel;
+    App.activeVisualizer.start();
+}
+
+function hideVisualizer() {
+    App.activeVisualizer.stop();
+    var visualizerElt = $('visualizer');
+    visualizerElt.hide();
+    App.activeVisualizer = null;
+    $('right').show();
+    $('main_timeline').show();
+}
+
 var JSLINT_OPTIONS = {debug: true, evil: true, laxbreak: true, forin: true, sub: true, css: true, cap: true, on: true, fragment: true};
 
 return {
@@ -288,6 +324,8 @@ return {
     load: load,
     selectTrackRange: selectTrackRange,
     playTimeline: playTimeline,
-    closeTimeline: closeTimeline
+    closeTimeline: closeTimeline,
+    showVisualizer: showVisualizer,
+    hideVisualizer: hideVisualizer
 };
 })();

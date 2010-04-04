@@ -226,6 +226,14 @@ body {
     color: #00aeef;
 }
 
+#show_visualizer_button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 10px;
+    padding: 5px;
+}
+
 h2 {
     background-color: #eeeeee;
     margin: 0;
@@ -347,4 +355,12 @@ textarea {
 
 .firefox_form_submit_kludge {
     display: none;
+}
+
+#visualizer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #000000;
+    z-index: 5;
 }
