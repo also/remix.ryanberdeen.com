@@ -117,10 +117,13 @@ extend(Remix, {
 
     onPlayerReady: function () {
         playButtonElt.removeClassName('disabled');
+        progressElt.show();
+        progressElt.style.width = '0';
     },
 
     onPlayerEmpty: function () {
         playButtonElt.addClassName('disabled');
+        progressElt.hide();
     },
 
     onPlayerProgress: function(progress, newSourceIndex, sourcePosition) {
@@ -273,7 +276,7 @@ function playInMainTimeline(aqs) {
 
 function closeTimeline(timeline) {
     if (timeline == App.playingTimeline && !Remix.playingSingleRange) {
-        // TODO stop playback
+        Remix.resetPlayer();
     }
     timeline.close();
 }
