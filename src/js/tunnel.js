@@ -58,6 +58,7 @@ function draw() {
         ctx.fill();
     }
 
+    ctx.beginPath();
     ctx.fillStyle = 'black';
     ctx.arc(CENTER_X, CENTER_Y, RADIUS - 3, 0, TWO_PI, false);
     ctx.fill();
