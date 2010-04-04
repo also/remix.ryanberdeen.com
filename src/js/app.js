@@ -216,18 +216,6 @@ function playTrack(track) {
     App.timeline.setTitle(track.displayTitle);
 }
 
-function playInMainTimeline(aqs) {
-    App.timeline.setMix(Remix.processAqs(aqs));
-    App.playTimeline(App.timeline);
-}
-
-function closeTimeline(timeline) {
-    if (timeline == App.playTimeline && !Remix.playingSingleRange) {
-        // TODO stop playback
-    }
-    timeline.close();
-}
-
 function selectTrack(track) {
     if (App.selectedTrack != track) {
         if (App.selectedTrack) {
@@ -259,6 +247,13 @@ function selectTrackRange(selection, source) {
     }
 }
 
+function load(result) {
+    var track = Remix.load(result.url, result.trackID);
+    track.searchResult = result;
+    track.displayTitle = result.title + ' by ' + result.artist;
+    updateTrack(track);
+}
+
 function addTimeline(aqs) {
     var timeline = new Timeline();
     timeline.setTitle('Untitled Edit');
@@ -271,11 +266,16 @@ function playTimeline(timeline) {
     Remix.remix(timeline.getAqs());
 }
 
-function load(result) {
-    var track = Remix.load(result.url, result.trackID);
-    track.searchResult = result;
-    track.displayTitle = result.title + ' by ' + result.artist;
-    updateTrack(track);
+function playInMainTimeline(aqs) {
+    App.timeline.setMix(Remix.processAqs(aqs));
+    App.playTimeline(App.timeline);
+}
+
+function closeTimeline(timeline) {
+    if (timeline == App.playingTimeline && !Remix.playingSingleRange) {
+        // TODO stop playback
+    }
+    timeline.close();
 }
 
 var JSLINT_OPTIONS = {debug: true, evil: true, laxbreak: true, forin: true, sub: true, css: true, cap: true, on: true, fragment: true};
