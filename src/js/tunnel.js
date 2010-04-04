@@ -1,6 +1,7 @@
 var Tunnel = (function () {
 
 var RADIUS = 30;
+var GAP_ANGLE = 0.1;
 
 var canvas = document.getElementById('visualizer');
 var ctx = canvas.getContext('2d');
@@ -49,18 +50,18 @@ function draw() {
 
     for (var j = 0; j < SLICES; j++) {
         var a = j / DIV + ((Math.cos(now / 1337) + now / 4096) % TWO_PI);
+        ctx.fillStyle = colors[j];
         ctx.beginPath();
         // NOTE: commenting out this line looks pretty sweet
         ctx.moveTo(CENTER_X - Math.sin(now / 618), CENTER_Y + Math.cos(now / 523));
-        ctx.arc(CENTER_X, CENTER_Y, RADIUS, a, a + ANGLE, 0);
+        ctx.arc(CENTER_X, CENTER_Y, RADIUS, a + GAP_ANGLE, a + ANGLE, 0);
         ctx.closePath();
-        ctx.fillStyle = colors[j];
         ctx.fill();
     }
 
     ctx.beginPath();
     ctx.fillStyle = 'black';
-    ctx.arc(CENTER_X, CENTER_Y, RADIUS - 3, 0, TWO_PI, false);
+    ctx.arc(CENTER_X, CENTER_Y, RADIUS - 2, 0, TWO_PI, false);
     ctx.fill();
 }
 
