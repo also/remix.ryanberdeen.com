@@ -294,6 +294,8 @@ function closeTimeline(timeline) {
 }
 
 function showVisualizer() {
+    $('right').hide();
+    $('main_timeline').hide();
     var playerElt = $('controls');
     var dim = document.viewport.getDimensions();
     var width = playerElt.getWidth();
@@ -302,8 +304,6 @@ function showVisualizer() {
     visualizerElt.width = width;
     visualizerElt.height = height;
     visualizerElt.show();
-    $('right').hide();
-    $('main_timeline').hide();
     App.activeVisualizer = Tunnel;
     App.activeVisualizer.start();
 }
