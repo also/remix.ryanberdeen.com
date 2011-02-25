@@ -31,63 +31,7 @@
 
 <div id="right">
 
-<form id="simplesearch"><input type="search" id="simplesearch_input" placeholder="Search Tracks" autosave="com.ryanberdeen.remix.simplesearch" results="10"/><input type="submit" class="firefox_form_submit_kludge"/>
-<span id="show_search_button">Advanced Search</span>
-</form>
-
 <span class="button" id="show_visualizer_button">V</span>
-
-<div id="advanced_search_wrapper" style="display: none">
-<h2>Advanced Search</h2>
-<span id="hide_search_button" class="close_button"></span>
-
-<div id="search_params">
-<form id="search_inputs" action="#"><input type="submit" class="firefox_form_submit_kludge"/>
-<div class="param_group">
-<div class="param"><label>Title:</label> <input type="text" id="title"/></div>
-<div class="param"><label>Artist:</label> <input type="text" id="artist"/></div>
-<div class="param"><label>Text:</label> <input type="text" id="query"/></div>
-</div>
-
-<div class="param_group">
-<div class="param">
-<span class="label">Tempo:</span> <input type="text" id="constraint_tempo_min" size="5"/>–<input type="text" id="constraint_tempo_max" size="5"/>
-</div>
-
-<div class="param">
-<span class="label">Duration:</span> <input type="text" id="constraint_duration_min" size="5"/>–<input type="text" id="constraint_duration_max" size="5"/>
-</div>
-
-<div class="param">
-<span class="label">Loudness:</span> <input type="text" id="constraint_loudness_min" size="5"/>–<input type="text" id="constraint_loudness_max" size="5"/>
-</div>
-</div>
-
-<div class="param_group">
-<div class="param"><label>Mode:</label> <select id="constraint_mode"><option></option><option value="1">Major</option><option value="0">Minor</option></select></div>
-
-<div class="param"><label>Key:</label> <input type="text" id="constraint_key" size="5"/></div>
-</div>
-
-<div class="param_group">
-<div class="param">
-<span class="label">Familiarity:</span> <input type="text" id="constraint_familiarity_min" size="5"/>–<input type="text" id="constraint_familiarity_max" size="5"/>
-</div>
-
-<div class="param">
-<span class="label">Hotttnesss:</span> <input type="text" id="constraint_hotttnesss_min" size="5"/>–<input type="text" id="constraint_hotttnesss_max" size="5"/>
-</div>
-</div>
-
-<div class="param_group">
-<span class="label">Latitude:</span> <input type="text" id="constraint_latitude_min"/>–<input type="text" id="constraint_latitude_max"/>
-
-<span class="label">Longitude:</span> <input type="text" id="constraint_longitude_min"/>–<input type="text" id="constraint_longitude_max"/>
-</div>
-</form>
-<span id="search_button" class="button">Search</span>
-</div>
-</div>
 
 <div id="track_info"></div>
 
@@ -126,7 +70,6 @@ play(samples);</textarea>
 &bull; <a href="mailto:remix@ryanberdeen.com">remix@ryanberdeen.com</a>
 &bull; Check out <strong><a href="http://github.com/also/remixjs">remixjs</a></strong> on GitHub.
 </div>
-<script type="text/javascript" src="search.js"></script>
 
 <script type="text/javascript">App.init();</script>
 
